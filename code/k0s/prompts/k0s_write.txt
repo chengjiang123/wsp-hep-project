@@ -1,0 +1,40 @@
+You are a particle physicist. Write, by hand and without any data, a small neural network that selects
+K0S -> pi+ pi- decays among V0 candidates. You will not see any labelled example. Your weights are used as they are,
+and later as the starting point and prior for training on a few labelled candidates.
+
+The sample.
+  Pythia8 minimum-bias pp collisions at sqrt(s) = 13.6 TeV, each with 5 more minimum-bias events overlaid.
+  A toy of an ALICE-like barrel tracker: charged tracks with pT > 0.15 GeV, |eta| < 0.8, produced within 40 cm of the beam.
+  Position resolution (20 um + 60 um / pT[GeV]) * (1 + R / 10 cm), added in quadrature for the first two terms,
+  where R is the transverse production radius. pT resolution 1% (+) 0.5% * pT. Angular resolution 0.5 mrad (+) 2 mrad / p.
+  No material, no fake tracks, no particle identification.
+  V0 candidates are opposite-charge track pairs with a vertex fit, kept if: DCA between daughters < 2 cm,
+  cos(pointing angle) > 0.9, decay radius > 0.2 cm, and 0.42 < m(pi+ pi-) < 0.58 GeV.
+  Signal: true K0S -> pi+ pi- with both daughters reconstructed. Background: everything else that passes, i.e.
+  combinatorial pairs of primary and secondary tracks, Lambda and anti-Lambda decays, and other secondaries.
+
+The 8 input features of each candidate (index: name [unit]):
+  0 DCA between the two daughter tracks [cm]
+  1 cosine of the pointing angle between the V0 momentum and the line from the primary vertex to the decay vertex
+  2 DCA of the positive daughter to the primary vertex [cm]
+  3 DCA of the negative daughter to the primary vertex [cm]
+  4 transverse decay radius [cm]
+  5 m L / p, the proper decay length using the K0S mass [cm]
+  6 Armenteros ratio qT / |alpha|
+  7 |m(p pi) - m_Lambda| [GeV], the invariant mass under the Lambda (or anti-Lambda) hypothesis, minus 1.11568 GeV
+
+The network.
+  score = bias + sum_j w_j * tanh(unit_j). Each unit is a soft cut on one feature:
+    {"cut": "<readable name>", "f": <feature index>, "t": <threshold in the physical units above>,
+     "dir": ">" or "<" (the side that is K0S-like), "k": <sharpness, 0.3 to 6>, "w": <output weight, 0 to 4>}
+  The cut acts on a log scale: for features 0, 2, 3, 4, 5, 7 on log10(feature), for feature 1 on log10(1 - cos),
+  for feature 6 linearly. k is the slope per half decade (per 0.2 in qT/|alpha| for feature 6): k = 2 is a soft cut,
+  k = 6 is close to a hard cut, and k below 1 is a smooth preference over a wide range rather than a cut.
+  You may use several units on the same feature (for example a sharp cut and a smooth preference, or a window).
+  Use between 4 and 20 units. Only the ranking of the score matters, so the bias only sets the scale of the output.
+
+Goal: the best separation of K0S from background, measured by AUC and by background rejection at 90% and 95% K0S
+efficiency on an independent test sample, and a good starting point for training with few labels.
+
+Answer with a short paragraph of physics reasoning for each choice, then ONE JSON object
+{"note": "<one line>", "bias": <number>, "units": [...]} in a ```json block.

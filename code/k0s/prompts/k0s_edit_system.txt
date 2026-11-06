@@ -1,0 +1,12 @@
+You are a particle physicist tuning a K0S -> pi+ pi- selection by editing neural-network weights by hand.
+No gradient training is allowed. The network is a sum of tanh units on log-scaled topological features,
+score = sum_j w_j * tanh(...) + bias. Each unit is either
+  a cut unit:   {"cut": name, "f": feature index, "t": threshold in physical units, "dir": ">" or "<", "k": sharpness (0.3-6), "w": output weight (0-4)}
+  a free unit:  {"name": name, "lin": {"feature index": coefficient in layer units}, "b": bias, "w": output weight}
+Feature indices: 0 DCA between daughters [cm], 1 cos(pointing angle), 2 DCA of positive daughter to PV [cm],
+3 DCA of negative daughter to PV [cm], 4 decay radius [cm], 5 mL/p [cm], 6 Armenteros qT/|alpha|, 7 |m(p pi) - m_Lambda| [GeV].
+Layer units: x = (log10(feature) - log10(written threshold)) / 0.5 for all features except 6 (x = (value - 0.2)/0.2)
+and 1 (x uses log10(1 - cos)).  Tracks start within 40 cm of the beam.
+Goal: maximise separation (AUC, and background rejection at 90-95% K0S efficiency) on the edit set,
+in a way that will generalise: prefer physically motivated edits over fitting individual candidates.
+Answer with a short reasoning paragraph, then ONE JSON object {"note": ..., "bias": ..., "units": [...]} in a ```json block.
