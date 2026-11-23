@@ -1,0 +1,122 @@
+{
+"c_N10000_s0": {"note": "6 shrunk physics trees: cosPA, daughter DCA, both-daughter DCA to PV, Lambda-mass veto with Armenteros, proper decay length, Armenteros; cuts at this item's K0S quantiles", "bias": 0.5, "trees": [
+ {"f":1,"t":0.9975,"lo":{"f":1,"t":0.99,"lo":-2.6,"hi":-1.2},"hi":{"f":1,"t":0.9999,"lo":0.5,"hi":1.8}},
+ {"f":0,"t":0.186,"lo":{"f":0,"t":0.0616,"lo":1.1,"hi":0.3},"hi":{"f":0,"t":0.5,"lo":-1.2,"hi":-2.0}},
+ {"f":2,"t":0.156,"lo":{"f":3,"t":0.165,"lo":-2.5,"hi":-0.9},"hi":{"f":3,"t":0.165,"lo":-0.9,"hi":0.7}},
+ {"f":7,"t":0.005,"lo":{"f":6,"t":0.25,"lo":-2.2,"hi":-0.8},"hi":{"f":7,"t":0.03,"lo":-0.05,"hi":0.1}},
+ {"f":5,"t":1.0,"lo":{"f":5,"t":0.3,"lo":-0.8,"hi":-0.25},"hi":{"f":5,"t":12.0,"lo":0.35,"hi":-0.5}},
+ {"f":6,"t":0.1,"lo":-0.6,"hi":{"f":6,"t":0.9,"lo":-0.05,"hi":0.15}}
+]},
+"c_N10000_s1": {"note": "6 shrunk physics trees: cosPA, daughter DCA, both-daughter DCA to PV, Lambda-mass veto with Armenteros, proper decay length, Armenteros; cuts at this item's K0S quantiles", "bias": 0.5, "trees": [
+ {"f":1,"t":0.9977,"lo":{"f":1,"t":0.99,"lo":-2.6,"hi":-1.2},"hi":{"f":1,"t":0.9999,"lo":0.5,"hi":1.8}},
+ {"f":0,"t":0.182,"lo":{"f":0,"t":0.063,"lo":1.1,"hi":0.3},"hi":{"f":0,"t":0.5,"lo":-1.2,"hi":-2.0}},
+ {"f":2,"t":0.174,"lo":{"f":3,"t":0.178,"lo":-2.5,"hi":-0.9},"hi":{"f":3,"t":0.178,"lo":-0.9,"hi":0.7}},
+ {"f":7,"t":0.005,"lo":{"f":6,"t":0.25,"lo":-2.2,"hi":-0.8},"hi":{"f":7,"t":0.03,"lo":-0.05,"hi":0.1}},
+ {"f":5,"t":1.0,"lo":{"f":5,"t":0.3,"lo":-0.8,"hi":-0.25},"hi":{"f":5,"t":12.0,"lo":0.35,"hi":-0.5}},
+ {"f":6,"t":0.1,"lo":-0.6,"hi":{"f":6,"t":0.9,"lo":-0.05,"hi":0.15}}
+]},
+"c_N10000_s2": {"note": "6 shrunk physics trees: cosPA, daughter DCA, both-daughter DCA to PV, Lambda-mass veto with Armenteros, proper decay length, Armenteros; cuts at this item's K0S quantiles", "bias": 0.5, "trees": [
+ {"f":1,"t":0.9979,"lo":{"f":1,"t":0.99,"lo":-2.6,"hi":-1.2},"hi":{"f":1,"t":0.9999,"lo":0.5,"hi":1.8}},
+ {"f":0,"t":0.173,"lo":{"f":0,"t":0.0606,"lo":1.1,"hi":0.3},"hi":{"f":0,"t":0.5,"lo":-1.2,"hi":-2.0}},
+ {"f":2,"t":0.181,"lo":{"f":3,"t":0.182,"lo":-2.5,"hi":-0.9},"hi":{"f":3,"t":0.182,"lo":-0.9,"hi":0.7}},
+ {"f":7,"t":0.005,"lo":{"f":6,"t":0.25,"lo":-2.2,"hi":-0.8},"hi":{"f":7,"t":0.03,"lo":-0.05,"hi":0.1}},
+ {"f":5,"t":1.0,"lo":{"f":5,"t":0.3,"lo":-0.8,"hi":-0.25},"hi":{"f":5,"t":12.0,"lo":0.35,"hi":-0.5}},
+ {"f":6,"t":0.1,"lo":-0.6,"hi":{"f":6,"t":0.9,"lo":-0.05,"hi":0.15}}
+]},
+"c_N10000_s3": {"note": "6 shrunk physics trees: cosPA, daughter DCA, both-daughter DCA to PV, Lambda-mass veto with Armenteros, proper decay length, Armenteros; cuts at this item's K0S quantiles", "bias": 0.5, "trees": [
+ {"f":1,"t":0.9977,"lo":{"f":1,"t":0.99,"lo":-2.6,"hi":-1.2},"hi":{"f":1,"t":0.9998,"lo":0.5,"hi":1.8}},
+ {"f":0,"t":0.19,"lo":{"f":0,"t":0.064,"lo":1.1,"hi":0.3},"hi":{"f":0,"t":0.5,"lo":-1.2,"hi":-2.0}},
+ {"f":2,"t":0.161,"lo":{"f":3,"t":0.154,"lo":-2.5,"hi":-0.9},"hi":{"f":3,"t":0.154,"lo":-0.9,"hi":0.7}},
+ {"f":7,"t":0.005,"lo":{"f":6,"t":0.25,"lo":-2.2,"hi":-0.8},"hi":{"f":7,"t":0.03,"lo":-0.05,"hi":0.1}},
+ {"f":5,"t":1.0,"lo":{"f":5,"t":0.3,"lo":-0.8,"hi":-0.25},"hi":{"f":5,"t":12.0,"lo":0.35,"hi":-0.5}},
+ {"f":6,"t":0.1,"lo":-0.6,"hi":{"f":6,"t":0.9,"lo":-0.05,"hi":0.15}}
+]},
+"c_N10000_s4": {"note": "6 shrunk physics trees: cosPA, daughter DCA, both-daughter DCA to PV, Lambda-mass veto with Armenteros, proper decay length, Armenteros; cuts at this item's K0S quantiles", "bias": 0.5, "trees": [
+ {"f":1,"t":0.9978,"lo":{"f":1,"t":0.99,"lo":-2.6,"hi":-1.2},"hi":{"f":1,"t":0.9999,"lo":0.5,"hi":1.8}},
+ {"f":0,"t":0.19,"lo":{"f":0,"t":0.0624,"lo":1.1,"hi":0.3},"hi":{"f":0,"t":0.5,"lo":-1.2,"hi":-2.0}},
+ {"f":2,"t":0.167,"lo":{"f":3,"t":0.161,"lo":-2.5,"hi":-0.9},"hi":{"f":3,"t":0.161,"lo":-0.9,"hi":0.7}},
+ {"f":7,"t":0.005,"lo":{"f":6,"t":0.25,"lo":-2.2,"hi":-0.8},"hi":{"f":7,"t":0.03,"lo":-0.05,"hi":0.1}},
+ {"f":5,"t":1.0,"lo":{"f":5,"t":0.3,"lo":-0.8,"hi":-0.25},"hi":{"f":5,"t":12.0,"lo":0.35,"hi":-0.5}},
+ {"f":6,"t":0.1,"lo":-0.6,"hi":{"f":6,"t":0.9,"lo":-0.05,"hi":0.15}}
+]},
+"c_N30000_s0": {"note": "6 shrunk physics trees: cosPA, daughter DCA, both-daughter DCA to PV, Lambda-mass veto with Armenteros, proper decay length, Armenteros; cuts at this item's K0S quantiles", "bias": 0.5, "trees": [
+ {"f":1,"t":0.9975,"lo":{"f":1,"t":0.99,"lo":-2.6,"hi":-1.2},"hi":{"f":1,"t":0.9999,"lo":0.5,"hi":1.8}},
+ {"f":0,"t":0.18,"lo":{"f":0,"t":0.0627,"lo":1.1,"hi":0.3},"hi":{"f":0,"t":0.5,"lo":-1.2,"hi":-2.0}},
+ {"f":2,"t":0.163,"lo":{"f":3,"t":0.168,"lo":-2.5,"hi":-0.9},"hi":{"f":3,"t":0.168,"lo":-0.9,"hi":0.7}},
+ {"f":7,"t":0.005,"lo":{"f":6,"t":0.25,"lo":-2.2,"hi":-0.8},"hi":{"f":7,"t":0.03,"lo":-0.05,"hi":0.1}},
+ {"f":5,"t":1.0,"lo":{"f":5,"t":0.3,"lo":-0.8,"hi":-0.25},"hi":{"f":5,"t":12.0,"lo":0.35,"hi":-0.5}},
+ {"f":6,"t":0.1,"lo":-0.6,"hi":{"f":6,"t":0.9,"lo":-0.05,"hi":0.15}}
+]},
+"c_N30000_s1": {"note": "6 shrunk physics trees: cosPA, daughter DCA, both-daughter DCA to PV, Lambda-mass veto with Armenteros, proper decay length, Armenteros; cuts at this item's K0S quantiles", "bias": 0.5, "trees": [
+ {"f":1,"t":0.9975,"lo":{"f":1,"t":0.99,"lo":-2.6,"hi":-1.2},"hi":{"f":1,"t":0.9999,"lo":0.5,"hi":1.8}},
+ {"f":0,"t":0.168,"lo":{"f":0,"t":0.0609,"lo":1.1,"hi":0.3},"hi":{"f":0,"t":0.5,"lo":-1.2,"hi":-2.0}},
+ {"f":2,"t":0.171,"lo":{"f":3,"t":0.167,"lo":-2.5,"hi":-0.9},"hi":{"f":3,"t":0.167,"lo":-0.9,"hi":0.7}},
+ {"f":7,"t":0.005,"lo":{"f":6,"t":0.25,"lo":-2.2,"hi":-0.8},"hi":{"f":7,"t":0.03,"lo":-0.05,"hi":0.1}},
+ {"f":5,"t":1.0,"lo":{"f":5,"t":0.3,"lo":-0.8,"hi":-0.25},"hi":{"f":5,"t":12.0,"lo":0.35,"hi":-0.5}},
+ {"f":6,"t":0.1,"lo":-0.6,"hi":{"f":6,"t":0.9,"lo":-0.05,"hi":0.15}}
+]},
+"c_N30000_s2": {"note": "6 shrunk physics trees: cosPA, daughter DCA, both-daughter DCA to PV, Lambda-mass veto with Armenteros, proper decay length, Armenteros; cuts at this item's K0S quantiles", "bias": 0.5, "trees": [
+ {"f":1,"t":0.9974,"lo":{"f":1,"t":0.99,"lo":-2.6,"hi":-1.2},"hi":{"f":1,"t":0.9999,"lo":0.5,"hi":1.8}},
+ {"f":0,"t":0.185,"lo":{"f":0,"t":0.0626,"lo":1.1,"hi":0.3},"hi":{"f":0,"t":0.5,"lo":-1.2,"hi":-2.0}},
+ {"f":2,"t":0.168,"lo":{"f":3,"t":0.169,"lo":-2.5,"hi":-0.9},"hi":{"f":3,"t":0.169,"lo":-0.9,"hi":0.7}},
+ {"f":7,"t":0.005,"lo":{"f":6,"t":0.25,"lo":-2.2,"hi":-0.8},"hi":{"f":7,"t":0.03,"lo":-0.05,"hi":0.1}},
+ {"f":5,"t":1.0,"lo":{"f":5,"t":0.3,"lo":-0.8,"hi":-0.25},"hi":{"f":5,"t":12.0,"lo":0.35,"hi":-0.5}},
+ {"f":6,"t":0.1,"lo":-0.6,"hi":{"f":6,"t":0.9,"lo":-0.05,"hi":0.15}}
+]},
+"c_N30000_s3": {"note": "6 shrunk physics trees: cosPA, daughter DCA, both-daughter DCA to PV, Lambda-mass veto with Armenteros, proper decay length, Armenteros; cuts at this item's K0S quantiles", "bias": 0.5, "trees": [
+ {"f":1,"t":0.9976,"lo":{"f":1,"t":0.99,"lo":-2.6,"hi":-1.2},"hi":{"f":1,"t":0.9999,"lo":0.5,"hi":1.8}},
+ {"f":0,"t":0.18,"lo":{"f":0,"t":0.0617,"lo":1.1,"hi":0.3},"hi":{"f":0,"t":0.5,"lo":-1.2,"hi":-2.0}},
+ {"f":2,"t":0.169,"lo":{"f":3,"t":0.166,"lo":-2.5,"hi":-0.9},"hi":{"f":3,"t":0.166,"lo":-0.9,"hi":0.7}},
+ {"f":7,"t":0.005,"lo":{"f":6,"t":0.25,"lo":-2.2,"hi":-0.8},"hi":{"f":7,"t":0.03,"lo":-0.05,"hi":0.1}},
+ {"f":5,"t":1.0,"lo":{"f":5,"t":0.3,"lo":-0.8,"hi":-0.25},"hi":{"f":5,"t":12.0,"lo":0.35,"hi":-0.5}},
+ {"f":6,"t":0.1,"lo":-0.6,"hi":{"f":6,"t":0.9,"lo":-0.05,"hi":0.15}}
+]},
+"c_N30000_s4": {"note": "6 shrunk physics trees: cosPA, daughter DCA, both-daughter DCA to PV, Lambda-mass veto with Armenteros, proper decay length, Armenteros; cuts at this item's K0S quantiles", "bias": 0.5, "trees": [
+ {"f":1,"t":0.9974,"lo":{"f":1,"t":0.99,"lo":-2.6,"hi":-1.2},"hi":{"f":1,"t":0.9999,"lo":0.5,"hi":1.8}},
+ {"f":0,"t":0.183,"lo":{"f":0,"t":0.062,"lo":1.1,"hi":0.3},"hi":{"f":0,"t":0.5,"lo":-1.2,"hi":-2.0}},
+ {"f":2,"t":0.177,"lo":{"f":3,"t":0.164,"lo":-2.5,"hi":-0.9},"hi":{"f":3,"t":0.164,"lo":-0.9,"hi":0.7}},
+ {"f":7,"t":0.005,"lo":{"f":6,"t":0.25,"lo":-2.2,"hi":-0.8},"hi":{"f":7,"t":0.03,"lo":-0.05,"hi":0.1}},
+ {"f":5,"t":1.0,"lo":{"f":5,"t":0.3,"lo":-0.8,"hi":-0.25},"hi":{"f":5,"t":12.0,"lo":0.35,"hi":-0.5}},
+ {"f":6,"t":0.1,"lo":-0.6,"hi":{"f":6,"t":0.9,"lo":-0.05,"hi":0.15}}
+]},
+"c_N50000_s0": {"note": "6 shrunk physics trees: cosPA, daughter DCA, both-daughter DCA to PV, Lambda-mass veto with Armenteros, proper decay length, Armenteros; cuts at this item's K0S quantiles", "bias": 0.5, "trees": [
+ {"f":1,"t":0.9976,"lo":{"f":1,"t":0.99,"lo":-2.6,"hi":-1.2},"hi":{"f":1,"t":0.9999,"lo":0.5,"hi":1.8}},
+ {"f":0,"t":0.183,"lo":{"f":0,"t":0.0625,"lo":1.1,"hi":0.3},"hi":{"f":0,"t":0.5,"lo":-1.2,"hi":-2.0}},
+ {"f":2,"t":0.166,"lo":{"f":3,"t":0.166,"lo":-2.5,"hi":-0.9},"hi":{"f":3,"t":0.166,"lo":-0.9,"hi":0.7}},
+ {"f":7,"t":0.005,"lo":{"f":6,"t":0.25,"lo":-2.2,"hi":-0.8},"hi":{"f":7,"t":0.03,"lo":-0.05,"hi":0.1}},
+ {"f":5,"t":1.0,"lo":{"f":5,"t":0.3,"lo":-0.8,"hi":-0.25},"hi":{"f":5,"t":12.0,"lo":0.35,"hi":-0.5}},
+ {"f":6,"t":0.1,"lo":-0.6,"hi":{"f":6,"t":0.9,"lo":-0.05,"hi":0.15}}
+]},
+"c_N50000_s1": {"note": "6 shrunk physics trees: cosPA, daughter DCA, both-daughter DCA to PV, Lambda-mass veto with Armenteros, proper decay length, Armenteros; cuts at this item's K0S quantiles", "bias": 0.5, "trees": [
+ {"f":1,"t":0.9975,"lo":{"f":1,"t":0.99,"lo":-2.6,"hi":-1.2},"hi":{"f":1,"t":0.9999,"lo":0.5,"hi":1.8}},
+ {"f":0,"t":0.174,"lo":{"f":0,"t":0.0609,"lo":1.1,"hi":0.3},"hi":{"f":0,"t":0.5,"lo":-1.2,"hi":-2.0}},
+ {"f":2,"t":0.169,"lo":{"f":3,"t":0.168,"lo":-2.5,"hi":-0.9},"hi":{"f":3,"t":0.168,"lo":-0.9,"hi":0.7}},
+ {"f":7,"t":0.005,"lo":{"f":6,"t":0.25,"lo":-2.2,"hi":-0.8},"hi":{"f":7,"t":0.03,"lo":-0.05,"hi":0.1}},
+ {"f":5,"t":1.0,"lo":{"f":5,"t":0.3,"lo":-0.8,"hi":-0.25},"hi":{"f":5,"t":12.0,"lo":0.35,"hi":-0.5}},
+ {"f":6,"t":0.1,"lo":-0.6,"hi":{"f":6,"t":0.9,"lo":-0.05,"hi":0.15}}
+]},
+"c_N50000_s2": {"note": "6 shrunk physics trees: cosPA, daughter DCA, both-daughter DCA to PV, Lambda-mass veto with Armenteros, proper decay length, Armenteros; cuts at this item's K0S quantiles", "bias": 0.5, "trees": [
+ {"f":1,"t":0.9975,"lo":{"f":1,"t":0.99,"lo":-2.6,"hi":-1.2},"hi":{"f":1,"t":0.9998,"lo":0.5,"hi":1.8}},
+ {"f":0,"t":0.185,"lo":{"f":0,"t":0.062,"lo":1.1,"hi":0.3},"hi":{"f":0,"t":0.5,"lo":-1.2,"hi":-2.0}},
+ {"f":2,"t":0.167,"lo":{"f":3,"t":0.167,"lo":-2.5,"hi":-0.9},"hi":{"f":3,"t":0.167,"lo":-0.9,"hi":0.7}},
+ {"f":7,"t":0.005,"lo":{"f":6,"t":0.25,"lo":-2.2,"hi":-0.8},"hi":{"f":7,"t":0.03,"lo":-0.05,"hi":0.1}},
+ {"f":5,"t":1.0,"lo":{"f":5,"t":0.3,"lo":-0.8,"hi":-0.25},"hi":{"f":5,"t":12.0,"lo":0.35,"hi":-0.5}},
+ {"f":6,"t":0.1,"lo":-0.6,"hi":{"f":6,"t":0.9,"lo":-0.05,"hi":0.15}}
+]},
+"c_N50000_s3": {"note": "6 shrunk physics trees: cosPA, daughter DCA, both-daughter DCA to PV, Lambda-mass veto with Armenteros, proper decay length, Armenteros; cuts at this item's K0S quantiles", "bias": 0.5, "trees": [
+ {"f":1,"t":0.9976,"lo":{"f":1,"t":0.99,"lo":-2.6,"hi":-1.2},"hi":{"f":1,"t":0.9999,"lo":0.5,"hi":1.8}},
+ {"f":0,"t":0.189,"lo":{"f":0,"t":0.0625,"lo":1.1,"hi":0.3},"hi":{"f":0,"t":0.5,"lo":-1.2,"hi":-2.0}},
+ {"f":2,"t":0.168,"lo":{"f":3,"t":0.172,"lo":-2.5,"hi":-0.9},"hi":{"f":3,"t":0.172,"lo":-0.9,"hi":0.7}},
+ {"f":7,"t":0.005,"lo":{"f":6,"t":0.25,"lo":-2.2,"hi":-0.8},"hi":{"f":7,"t":0.03,"lo":-0.05,"hi":0.1}},
+ {"f":5,"t":1.0,"lo":{"f":5,"t":0.3,"lo":-0.8,"hi":-0.25},"hi":{"f":5,"t":12.0,"lo":0.35,"hi":-0.5}},
+ {"f":6,"t":0.1,"lo":-0.6,"hi":{"f":6,"t":0.9,"lo":-0.05,"hi":0.15}}
+]},
+"c_N50000_s4": {"note": "6 shrunk physics trees: cosPA, daughter DCA, both-daughter DCA to PV, Lambda-mass veto with Armenteros, proper decay length, Armenteros; cuts at this item's K0S quantiles", "bias": 0.5, "trees": [
+ {"f":1,"t":0.9976,"lo":{"f":1,"t":0.99,"lo":-2.6,"hi":-1.2},"hi":{"f":1,"t":0.9999,"lo":0.5,"hi":1.8}},
+ {"f":0,"t":0.184,"lo":{"f":0,"t":0.0626,"lo":1.1,"hi":0.3},"hi":{"f":0,"t":0.5,"lo":-1.2,"hi":-2.0}},
+ {"f":2,"t":0.166,"lo":{"f":3,"t":0.17,"lo":-2.5,"hi":-0.9},"hi":{"f":3,"t":0.17,"lo":-0.9,"hi":0.7}},
+ {"f":7,"t":0.005,"lo":{"f":6,"t":0.25,"lo":-2.2,"hi":-0.8},"hi":{"f":7,"t":0.03,"lo":-0.05,"hi":0.1}},
+ {"f":5,"t":1.0,"lo":{"f":5,"t":0.3,"lo":-0.8,"hi":-0.25},"hi":{"f":5,"t":12.0,"lo":0.35,"hi":-0.5}},
+ {"f":6,"t":0.1,"lo":-0.6,"hi":{"f":6,"t":0.9,"lo":-0.05,"hi":0.15}}
+]}
+}

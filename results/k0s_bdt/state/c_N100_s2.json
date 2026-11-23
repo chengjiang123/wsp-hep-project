@@ -1,0 +1,612 @@
+{
+ "N": 100,
+ "seed": 2,
+ "rounds": [
+  {
+   "round": 1,
+   "ensemble": {
+    "note": "Physics prior, scale 0.85; pointing split lowered to 0.996 (K0S 5% at 0.994, background 95% at 0.998); weak Lambda veto since few Lambdas in this sample.",
+    "bias": 0,
+    "trees": [
+     {
+      "f": 1,
+      "t": 0.996,
+      "lo": {
+       "f": 0,
+       "t": 0.1,
+       "lo": -1.02,
+       "hi": -2.12
+      },
+      "hi": {
+       "f": 1,
+       "t": 0.9999,
+       "lo": {
+        "f": 0,
+        "t": 0.2,
+        "lo": 0.76,
+        "hi": -0.51
+       },
+       "hi": {
+        "f": 0,
+        "t": 0.2,
+        "lo": 1.36,
+        "hi": -0.17
+       }
+      }
+     },
+     {
+      "f": 2,
+      "t": 0.1,
+      "lo": {
+       "f": 3,
+       "t": 0.1,
+       "lo": -2.12,
+       "hi": -0.76
+      },
+      "hi": {
+       "f": 3,
+       "t": 0.1,
+       "lo": -0.76,
+       "hi": {
+        "f": 2,
+        "t": 0.3,
+        "lo": 0.34,
+        "hi": 0.85
+       }
+      }
+     },
+     {
+      "f": 7,
+      "t": 0.01,
+      "lo": {
+       "f": 6,
+       "t": 0.25,
+       "lo": -0.8,
+       "hi": -0.15
+      },
+      "hi": {
+       "f": 6,
+       "t": 0.12,
+       "lo": -0.5,
+       "hi": 0.18
+      }
+     },
+     {
+      "f": 5,
+      "t": 0.35,
+      "lo": {
+       "f": 4,
+       "t": 0.4,
+       "lo": -0.68,
+       "hi": -0.34
+      },
+      "hi": {
+       "f": 5,
+       "t": 12,
+       "lo": 0.26,
+       "hi": -0.4
+      }
+     },
+     {
+      "f": 0,
+      "t": 0.04,
+      "lo": 0.42,
+      "hi": {
+       "f": 0,
+       "t": 0.3,
+       "lo": 0.0,
+       "hi": -0.51
+      }
+     }
+    ]
+   },
+   "error": null,
+   "survivors": {
+    "background_kept": "1 of 37 training background at 95 % training K0S efficiency"
+   },
+   "val": {
+    "trees_auc": 1.0,
+    "trees_r95": "> 13 (no held-back background passes)",
+    "trees_logloss": 0.07826180869370582,
+    "boost_auc": 1.0,
+    "boost_r95": "> 13 (no held-back background passes)",
+    "boost_logloss": 0.00018851852361500868,
+    "boost_trees_added": 561,
+    "boost_gain_share": [
+     0.071,
+     0.444,
+     0.242,
+     0.063,
+     0.084,
+     0.049,
+     0.008,
+     0.04
+    ],
+    "boost_top_splits": [
+     {
+      "f": 1,
+      "t": 0.989,
+      "gain_share": 0.38
+     },
+     {
+      "f": 2,
+      "t": 0.0431,
+      "gain_share": 0.122
+     },
+     {
+      "f": 2,
+      "t": 0.111,
+      "gain_share": 0.055
+     },
+     {
+      "f": 2,
+      "t": 0.0865,
+      "gain_share": 0.053
+     },
+     {
+      "f": 4,
+      "t": 0.319,
+      "gain_share": 0.046
+     },
+     {
+      "f": 5,
+      "t": 0.266,
+      "gain_share": 0.037
+     },
+     {
+      "f": 3,
+      "t": 0.0497,
+      "gain_share": 0.035
+     },
+     {
+      "f": 0,
+      "t": 0.00822,
+      "gain_share": 0.032
+     }
+    ]
+   },
+   "test": {
+    "trees_auc": 0.9828185456666667,
+    "trees_r95": 12.185955734759514,
+    "boost_auc": 0.9876564188333333,
+    "boost_r95": 12.080212611741965
+   }
+  },
+  {
+   "round": 2,
+   "ensemble": {
+    "note": "Few Lambdas: keep Lambda veto mild; pointing root 0.996 with extra split at 0.988 (boost 0.989); primary-DCA split refined at 0.05 (boost 0.043); short-radius split 0.32 cm (boost 0.319).",
+    "bias": 0,
+    "trees": [
+     {
+      "f": 1,
+      "t": 0.996,
+      "lo": {
+       "f": 1,
+       "t": 0.988,
+       "lo": {
+        "f": 0,
+        "t": 0.1,
+        "lo": -2.04,
+        "hi": -2.72
+       },
+       "hi": {
+        "f": 0,
+        "t": 0.1,
+        "lo": -0.85,
+        "hi": -1.79
+       }
+      },
+      "hi": {
+       "f": 1,
+       "t": 0.9999,
+       "lo": {
+        "f": 0,
+        "t": 0.2,
+        "lo": 0.76,
+        "hi": -0.51
+       },
+       "hi": {
+        "f": 0,
+        "t": 0.2,
+        "lo": 1.36,
+        "hi": -0.17
+       }
+      }
+     },
+     {
+      "f": 2,
+      "t": 0.1,
+      "lo": {
+       "f": 3,
+       "t": 0.1,
+       "lo": {
+        "f": 2,
+        "t": 0.05,
+        "lo": {
+         "f": 3,
+         "t": 0.05,
+         "lo": -2.55,
+         "hi": -2.04
+        },
+        "hi": -1.87
+       },
+       "hi": {
+        "f": 2,
+        "t": 0.05,
+        "lo": -1.1,
+        "hi": -0.68
+       }
+      },
+      "hi": {
+       "f": 3,
+       "t": 0.1,
+       "lo": {
+        "f": 3,
+        "t": 0.05,
+        "lo": -1.1,
+        "hi": -0.68
+       },
+       "hi": {
+        "f": 2,
+        "t": 0.3,
+        "lo": 0.34,
+        "hi": 0.85
+       }
+      }
+     },
+     {
+      "f": 7,
+      "t": 0.004,
+      "lo": {
+       "f": 6,
+       "t": 0.25,
+       "lo": {
+        "f": 7,
+        "t": 0.0025,
+        "lo": -2.5,
+        "hi": -1.8
+       },
+       "hi": -0.5
+      },
+      "hi": {
+       "f": 7,
+       "t": 0.01,
+       "lo": {
+        "f": 6,
+        "t": 0.25,
+        "lo": -0.9,
+        "hi": -0.15
+       },
+       "hi": {
+        "f": 6,
+        "t": 0.12,
+        "lo": -0.5,
+        "hi": 0.18
+       }
+      }
+     },
+     {
+      "f": 5,
+      "t": 0.35,
+      "lo": {
+       "f": 4,
+       "t": 0.32,
+       "lo": -0.68,
+       "hi": -0.38
+      },
+      "hi": {
+       "f": 5,
+       "t": 12,
+       "lo": 0.26,
+       "hi": -0.4
+      }
+     },
+     {
+      "f": 0,
+      "t": 0.04,
+      "lo": 0.42,
+      "hi": {
+       "f": 0,
+       "t": 0.3,
+       "lo": 0.0,
+       "hi": -0.51
+      }
+     }
+    ]
+   },
+   "error": null,
+   "survivors": {
+    "background_kept": "0 of 37 training background at 95 % training K0S efficiency"
+   },
+   "val": {
+    "trees_auc": 1.0,
+    "trees_r95": "> 13 (no held-back background passes)",
+    "trees_logloss": 0.048915557833110704,
+    "boost_auc": 1.0,
+    "boost_r95": "> 13 (no held-back background passes)",
+    "boost_logloss": 0.00017048081588498217,
+    "boost_trees_added": 598,
+    "boost_gain_share": [
+     0.143,
+     0.266,
+     0.283,
+     0.103,
+     0.108,
+     0.044,
+     0.013,
+     0.04
+    ],
+    "boost_top_splits": [
+     {
+      "f": 1,
+      "t": 0.989,
+      "gain_share": 0.244
+     },
+     {
+      "f": 2,
+      "t": 0.0431,
+      "gain_share": 0.196
+     },
+     {
+      "f": 3,
+      "t": 0.0497,
+      "gain_share": 0.063
+     },
+     {
+      "f": 4,
+      "t": 0.319,
+      "gain_share": 0.05
+     },
+     {
+      "f": 0,
+      "t": 0.155,
+      "gain_share": 0.049
+     },
+     {
+      "f": 2,
+      "t": 0.111,
+      "gain_share": 0.035
+     },
+     {
+      "f": 2,
+      "t": 0.0457,
+      "gain_share": 0.026
+     },
+     {
+      "f": 0,
+      "t": 0.00822,
+      "gain_share": 0.025
+     }
+    ]
+   },
+   "test": {
+    "trees_auc": 0.9931157523333333,
+    "trees_r95": 20.92289715014362,
+    "boost_auc": 0.9914193626666667,
+    "boost_r95": 13.453518094981838
+   }
+  },
+  {
+   "round": 3,
+   "ensemble": {
+    "note": "Round-2 base; primary-DCA inner split 0.045 cm (boost 0.043); stronger penalty for radius <0.32 cm (boost 0.319); small reward for pointing >=0.99995; K0S daughter-DCA tail is long here so DCA penalty unchanged.",
+    "bias": 0,
+    "trees": [
+     {
+      "f": 1,
+      "t": 0.996,
+      "lo": {
+       "f": 1,
+       "t": 0.988,
+       "lo": {
+        "f": 0,
+        "t": 0.1,
+        "lo": -2.04,
+        "hi": -2.72
+       },
+       "hi": {
+        "f": 0,
+        "t": 0.1,
+        "lo": -0.85,
+        "hi": -1.79
+       }
+      },
+      "hi": {
+       "f": 1,
+       "t": 0.9999,
+       "lo": {
+        "f": 0,
+        "t": 0.2,
+        "lo": 0.76,
+        "hi": -0.51
+       },
+       "hi": {
+        "f": 0,
+        "t": 0.2,
+        "lo": 1.36,
+        "hi": -0.17
+       }
+      }
+     },
+     {
+      "f": 2,
+      "t": 0.1,
+      "lo": {
+       "f": 3,
+       "t": 0.1,
+       "lo": {
+        "f": 2,
+        "t": 0.045,
+        "lo": {
+         "f": 3,
+         "t": 0.05,
+         "lo": -2.6,
+         "hi": -2.04
+        },
+        "hi": -1.87
+       },
+       "hi": {
+        "f": 2,
+        "t": 0.045,
+        "lo": -1.15,
+        "hi": -0.68
+       }
+      },
+      "hi": {
+       "f": 3,
+       "t": 0.1,
+       "lo": {
+        "f": 3,
+        "t": 0.05,
+        "lo": -1.15,
+        "hi": -0.68
+       },
+       "hi": {
+        "f": 2,
+        "t": 0.3,
+        "lo": 0.34,
+        "hi": 0.85
+       }
+      }
+     },
+     {
+      "f": 7,
+      "t": 0.004,
+      "lo": {
+       "f": 6,
+       "t": 0.25,
+       "lo": {
+        "f": 7,
+        "t": 0.0025,
+        "lo": -2.5,
+        "hi": -1.8
+       },
+       "hi": -0.5
+      },
+      "hi": {
+       "f": 7,
+       "t": 0.01,
+       "lo": {
+        "f": 6,
+        "t": 0.25,
+        "lo": -0.9,
+        "hi": -0.15
+       },
+       "hi": {
+        "f": 6,
+        "t": 0.12,
+        "lo": -0.5,
+        "hi": 0.18
+       }
+      }
+     },
+     {
+      "f": 5,
+      "t": 0.35,
+      "lo": {
+       "f": 4,
+       "t": 0.32,
+       "lo": -0.9,
+       "hi": -0.38
+      },
+      "hi": {
+       "f": 5,
+       "t": 12,
+       "lo": 0.26,
+       "hi": -0.4
+      }
+     },
+     {
+      "f": 0,
+      "t": 0.04,
+      "lo": 0.42,
+      "hi": {
+       "f": 0,
+       "t": 0.3,
+       "lo": 0.0,
+       "hi": -0.51
+      }
+     },
+     {
+      "f": 1,
+      "t": 0.99995,
+      "lo": -0.1,
+      "hi": 0.15
+     }
+    ]
+   },
+   "error": null,
+   "survivors": {
+    "background_kept": "0 of 37 training background at 95 % training K0S efficiency"
+   },
+   "val": {
+    "trees_auc": 1.0,
+    "trees_r95": "> 13 (no held-back background passes)",
+    "trees_logloss": 0.04655514977129845,
+    "boost_auc": 1.0,
+    "boost_r95": "> 13 (no held-back background passes)",
+    "boost_logloss": 0.00010073674352583336,
+    "boost_trees_added": 541,
+    "boost_gain_share": [
+     0.153,
+     0.223,
+     0.256,
+     0.135,
+     0.148,
+     0.051,
+     0.003,
+     0.031
+    ],
+    "boost_top_splits": [
+     {
+      "f": 1,
+      "t": 0.989,
+      "gain_share": 0.203
+     },
+     {
+      "f": 2,
+      "t": 0.0431,
+      "gain_share": 0.163
+     },
+     {
+      "f": 4,
+      "t": 0.319,
+      "gain_share": 0.087
+     },
+     {
+      "f": 3,
+      "t": 0.0497,
+      "gain_share": 0.082
+     },
+     {
+      "f": 2,
+      "t": 0.111,
+      "gain_share": 0.038
+     },
+     {
+      "f": 0,
+      "t": 0.155,
+      "gain_share": 0.031
+     },
+     {
+      "f": 3,
+      "t": 0.306,
+      "gain_share": 0.029
+     },
+     {
+      "f": 0,
+      "t": 0.00822,
+      "gain_share": 0.028
+     }
+    ]
+   },
+   "test": {
+    "trees_auc": 0.9926279601666668,
+    "trees_r95": 15.511090429657205,
+    "boost_auc": 0.9913608538333335,
+    "boost_r95": 13.005592404734035
+   }
+  }
+ ]
+}

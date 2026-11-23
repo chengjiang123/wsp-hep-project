@@ -1,0 +1,47 @@
+You are a particle physicist building a K0S -> pi+ pi- selection as a small set of boosted decision trees, by writing
+the branches yourself: which feature each node splits on, the threshold in physical units, and the log-odds in each
+leaf. No training is done on your trees. After you answer, a standard gradient-boosting library (LightGBM, the same
+recipe for every item) adds its own trees on top of yours using the training labels of the item, with early stopping on
+the held-back labels; your trees are its starting point. The final selection is your trees plus the boosted trees.
+
+The sample.
+  Pythia8 minimum-bias pp collisions at sqrt(s) = 13.6 TeV, each with 5 more minimum-bias events overlaid.
+  A toy of an ALICE-like barrel tracker: charged tracks with pT > 0.15 GeV, |eta| < 0.8, produced within 40 cm of the beam.
+  Position resolution (20 um + 60 um / pT[GeV]) * (1 + R / 10 cm), pT resolution 1% (+) 0.5% * pT,
+  angular resolution 0.5 mrad (+) 2 mrad / p. No material, no fake tracks, no particle identification.
+  V0 candidates are opposite-charge track pairs with a vertex fit, kept if: DCA between daughters < 2 cm,
+  cos(pointing angle) > 0.9, decay radius > 0.2 cm, and 0.42 < m(pi+ pi-) < 0.58 GeV.
+  Signal: true K0S -> pi+ pi- with both daughters reconstructed. Background: everything else that passes, i.e.
+  combinatorial pairs of primary and secondary tracks, Lambda and anti-Lambda decays, and other secondaries.
+  Every item's labels are half K0S, half background, so log-odds 0 means "as likely K0S as background".
+
+Features (index: name [unit]):
+  0 DCA between the two daughter tracks [cm]
+  1 cosine of the pointing angle
+  2 DCA of the positive daughter to the primary vertex [cm]
+  3 DCA of the negative daughter to the primary vertex [cm]
+  4 transverse decay radius [cm]
+  5 m L / p, the proper decay length using the K0S mass [cm]
+  6 Armenteros ratio qT / |alpha|
+  7 |m(p pi) - m_Lambda| [GeV], the mass under the Lambda (or anti-Lambda) hypothesis minus 1.11568 GeV
+
+Tree format. A node is {"f": <feature index>, "t": <threshold, physical units>, "lo": <child if feature < t>,
+"hi": <child if feature >= t>}; a child is another node or a number (the leaf's log-odds contribution).
+The score of a candidate is bias + the sum over trees of the leaf it lands in. At most 12 trees, depth at most 4,
+|leaf| <= 20. Fewer, physically motivated trees are fine; leaves on regions that hold almost no training candidates
+should stay small, because the boosting will only correct what the labels can see.
+
+Each item is one independent problem (a different label sample; "labels" is how many labelled candidates it has).
+For each item you get the 5/25/50/75/95 % quantiles of every feature for the K0S and background candidates of its
+training part. From round 2 on you also get your previous ensembles for that item and, on its held-back labels, the
+AUC, the background rejection at 95 % K0S efficiency (R95) and the log-loss of your trees alone and of your trees plus
+the boosting, how many trees the boosting had to add, its split-gain share per feature and its strongest splits
+(feature, threshold): these show what your trees still miss. "training_survivors" are the quantiles of training
+background that your trees keep at 95 % training K0S efficiency. Rejection on few held-back labels is noisy: with a few
+hundred labels or less, trust physics and the log-loss more than R95. Edit branches (thresholds, leaves, add or remove
+nodes and trees) to improve the final selection on an independent test sample; the round with the best held-back
+log-loss of trees plus boosting is kept for each item.
+
+Answer: write ONE JSON file whose keys are the item ids of this batch and whose values are
+{"note": "<one line: what you changed and why>", "bias": <number>, "trees": [<node>, ...]}.
+Treat every item on its own; do not copy one item's numbers into another without reason.

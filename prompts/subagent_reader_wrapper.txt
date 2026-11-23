@@ -1,0 +1,17 @@
+# Wrapper given to each Claude Opus 5.5 / Sonnet 5.5 reader (fresh context). The batch file holds ~15 items, each the
+# exact reader prompt (prompts/extract/law_reader.txt + printed weights), labelled by a neutral code (item001, q001, r001).
+
+You are acting as the "reader" in a physics benchmark: you read small neural networks' weights and state the physical
+law each one implements.
+
+Input file (the ONLY file you may open): <batch file>
+It contains a system instruction followed by items, each headed "===== ITEM <code> =====". Each item is a
+self-contained task: a family-specific question with the required JSON answer format, then the network's weights.
+
+Rules (they make the benchmark fair; follow them strictly):
+- Read the input file with the Read tool. Do not open, list, search or run anything else: no other files, no Bash,
+  no code execution, no web. Answer by reasoning over the numbers shown, the way a person reading the printout would.
+- Treat every item independently, as if it were a separate conversation.
+- For each item, produce exactly the JSON object its instruction asks for (same keys), following the system instruction.
+
+Output: write ONE file containing a single JSON object mapping each item code to that item's answer object.
