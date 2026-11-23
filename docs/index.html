@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weight-Space Programming for HEP/NP</title>
+<meta name="description" content="Physics-shaped weight-space programming: a large language model encodes, edits and extracts physics directly in the weights of neural networks for high energy and nuclear physics.">
+<meta property="og:title" content="Weight-Space Programming with LLMs for High Energy and Nuclear Physics">
+<meta property="og:description" content="An LLM encodes physics into network weights, edits them without gradients, and extracts governing laws from trained weights.">
+<meta property="og:image" content="assets/overview.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fbfaf7; --surface: #ffffff; --ink: #1c1b19; --muted: #5d5a54; --line: #e4e0d8;
+  --encode: #c4262a; --edit: #d96a00; --extract: #1f6fae; --accent: #23236e;
+  --code-bg: #f3f1ec; --fig-bg: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15161a; --surface: #1d1f24; --ink: #ecebe7; --muted: #a8a59e; --line: #31343b;
+    --encode: #ff6b6b; --edit: #ffa24d; --extract: #6fb4ef; --accent: #a9a9ff;
+    --code-bg: #24272d; --fig-bg: #f6f5f2;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15161a; --surface: #1d1f24; --ink: #ecebe7; --muted: #a8a59e; --line: #31343b;
+  --encode: #ff6b6b; --edit: #ffa24d; --extract: #6fb4ef; --accent: #a9a9ff;
+  --code-bg: #24272d; --fig-bg: #f6f5f2;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 17px/1.65 "Source Serif 4", Georgia, serif;
+}
+main { max-width: 860px; margin: 0 auto; padding: 0 16px 72px; }
+header.hero { text-align: center; padding: 64px 0 28px; }
+.kicker { font: 500 13px/1 Inter, system-ui, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+h1 { font-weight: 700; font-size: clamp(28px, 5vw, 42px); line-height: 1.15; margin: 14px 0 18px; text-wrap: balance; }
+h1 .op-encode { color: var(--encode); } h1 .op-edit { color: var(--edit); } h1 .op-extract { color: var(--extract); }
+.authors { font-size: 18px; margin: 0; }
+.links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 24px 0 8px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; border-radius: 999px;
+  font: 500 15px/1 Inter, system-ui, sans-serif; text-decoration: none;
+  background: var(--ink); color: var(--bg); border: 1px solid var(--ink);
+}
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn[aria-disabled="true"] { opacity: .55; pointer-events: none; }
+.btn svg { width: 16px; height: 16px; }
+figure { margin: 28px 0; }
+.fig { background: var(--fig-bg); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+.fig img { display: block; width: 100%; height: auto; }
+figcaption { font: 14.5px/1.55 Inter, system-ui, sans-serif; color: var(--muted); margin-top: 10px; }
+section { margin-top: 56px; }
+h2 { font-size: 26px; margin: 0 0 14px; }
+h3 { font: 600 19px/1.3 Inter, system-ui, sans-serif; margin: 28px 0 8px; }
+p { margin: 0 0 14px; }
+.ops { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 22px 0; }
+.op { background: var(--surface); border: 1px solid var(--line); border-top: 4px solid; border-radius: 10px; padding: 16px; }
+.op h3 { margin: 0 0 6px; }
+.op p { font: 15px/1.55 Inter, system-ui, sans-serif; color: var(--muted); margin: 0; }
+.op.encode { border-top-color: var(--encode); } .op.encode h3 { color: var(--encode); }
+.op.edit { border-top-color: var(--edit); } .op.edit h3 { color: var(--edit); }
+.op.extract { border-top-color: var(--extract); } .op.extract h3 { color: var(--extract); }
+.result h3 { display: flex; align-items: center; gap: 10px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.dot.encode { background: var(--encode); } .dot.edit { background: var(--edit); } .dot.extract { background: var(--extract); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+pre {
+  background: var(--code-bg); border: 1px solid var(--line); border-radius: 10px; padding: 16px;
+  font: 13.5px/1.5 "JetBrains Mono", ui-monospace, monospace; overflow-x: auto; margin: 0;
+}
+.bib { position: relative; }
+.copy {
+  position: absolute; top: 10px; right: 10px; font: 500 13px/1 Inter, system-ui, sans-serif;
+  background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; cursor: pointer;
+}
+footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--line); font: 14px/1.5 Inter, system-ui, sans-serif; color: var(--muted); }
+a { color: var(--accent); }
+@media (max-width: 680px) {
+  body { font-size: 16px; }
+  header.hero { padding-top: 40px; }
+  .ops, .two { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <div class="kicker">High energy &amp; nuclear physics · machine learning</div>
+    <h1>Weight-Space Programming with Large Language Models for High Energy and Nuclear Physics</h1>
+    <p class="authors">Cheng Jiang <i>et al.</i></p>
+    <nav class="links">
+      <a class="btn" aria-disabled="true" href="#" title="arXiv link to follow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>
+        Paper (arXiv soon)</a>
+      <a class="btn ghost" href="https://github.com/chengjiang123/wsp-hep-project">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.3-1.69-1.3-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.78 1.2 1.78 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.4-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>
+        Code, prompts &amp; LLM interactions</a>
+      <a class="btn ghost" href="#cite">BibTeX</a>
+    </nav>
+  </header>
+
+  <figure>
+    <div class="fig"><img src="assets/overview.png" alt="Diagram: an LLM encodes physics into a physics-shaped network built from soft cuts, smooth responses and quadratic forms, edits its weights, and extracts laws from it; gradient training on labeled data can start from the encoded weights." width="2034" height="843"></div>
+    <figcaption>Physics-shaped weight-space programming. Because every weight of the network has a physical meaning, an LLM can <b style="color:var(--encode)">encode</b> physics knowledge into the weights, <b style="color:var(--edit)">edit</b> them directly without gradient steps, and <b style="color:var(--extract)">extract</b> governing laws from trained weights. Gradient training (∇) can start from, and be regularized towards, the encoded weights.</figcaption>
+  </figure>
+
+  <section id="abstract">
+    <h2>Abstract</h2>
+    <p>In high energy and nuclear physics, neural networks are shaped almost entirely by gradient descent, and physics knowledge reaches their weights only indirectly, through features, architectures or labels. Weight-space programming (WSP), in which a large language model writes and edits network weights directly, has recently emerged as an alternative to training. We develop <em>physics-shaped</em> WSP, in which the LLM operates on open-weight models built from, or decomposed into, soft cuts, smooth responses and quadratic forms, so that every weight retains an explicit physical meaning.</p>
+    <p>Encoded weights act as a prior worth an order of magnitude of labeled data, and LLM-written pair interactions boost a transformer trained on a thousand jets as much as the pair interaction learned by the Particle Transformer, with most of the gain lost when their physics is scrambled. Direct weight edits match black-box optimizers with up to two orders of magnitude fewer evaluations and inject domain knowledge absent from the training set of heavy-ion jets. On pretrained taggers across label budgets, edits by frontier LLMs raise the background rejection, both as a correction after fine-tuning and as an initialization before it. In a blind benchmark of 65 hidden laws, including synthetic, unphysical ones, frontier LLMs recover nearly every law captured by the trained network, far ahead of PySR and Operon on the same data.</p>
+  </section>
+
+  <section id="operations">
+    <h2>Three operations on the same weights</h2>
+    <div class="ops">
+      <div class="op encode"><h3>Encode</h3><p>The LLM writes physics knowledge into the weights as an inductive bias, using no data. Controls: networks trained from random weights, boosted trees and a particle-flow network.</p></div>
+      <div class="op edit"><h3>Edit</h3><p>The LLM reads diagnostics and changes the weights directly, with no gradient step. Controls: CMA-ES, TPE and random search, and fine-tuning.</p></div>
+      <div class="op extract"><h3>Extract</h3><p>The LLM reads a trained network's weights and states the law it learned, without seeing the data. Controls: PySR and Operon.</p></div>
+    </div>
+    <p>The automated runs cover six LLMs with no human in the loop, from small open-weight models to Claude Opus 5.5 and Sonnet 5.5.</p>
+  </section>
+
+  <section id="results">
+    <h2>Results</h2>
+
+    <div class="result">
+      <h3><span class="dot encode"></span>Physics knowledge as an inductive bias</h3>
+      <p>Across four tasks, starting from LLM-encoded weights is worth about an order of magnitude of labels. Pair interactions written by an LLM from physics alone, used as a frozen attention bias, improve a transformer trained on 10³ top-tagging jets as much as the pair interaction the Particle Transformer learned from 10⁸ jets. When their physics is scrambled, most of that gain disappears.</p>
+      <figure>
+        <div class="fig"><img src="assets/summary_ratio_top.png" alt="Ratio of the best model with encoded weights to the best model without, against the number of labels, in four tasks." loading="lazy"></div>
+        <figcaption>Best model with LLM-encoded weights over the best model without them, in background rejection, against the number of labels in four tasks. Values above one mean the encoded weights win.</figcaption>
+      </figure>
+      <figure>
+        <div class="fig"><img src="assets/part_jet_pairs.png" alt="Pair interactions between the particles of one top jet: learned by the pretrained pair network and written by Opus and Llama 4." loading="lazy"></div>
+        <figcaption>Pair interactions inside one real top jet: the network pretrained on 10⁸ jets, and heads written by Opus and by Llama 4 from physics alone.</figcaption>
+      </figure>
+    </div>
+
+    <div class="result">
+      <h3><span class="dot edit"></span>Direct weight editing</h3>
+      <p>On a K<sup>0</sup><sub>S</sub> selection, direct LLM edits reach the background rejection of CMA-ES, TPE and random search on the same weights with up to two orders of magnitude fewer evaluations, and every edit is a physics statement. On heavy-ion jets, an edit restricted to the inputs the LLM predicted to be safe removes a bias that no training sample showed. On pretrained ParT and OmniLearned taggers, frontier LLM edits raise the rejection over plain fine-tuning on the same labels, both after fine-tuning and before it.</p>
+      <figure>
+        <div class="fig"><img src="assets/fig_edit_search.png" alt="Test background rejection against the number of evaluations, for LLM edits and for CMA-ES, TPE and random search." loading="lazy"></div>
+        <figcaption>K<sup>0</sup><sub>S</sub> selection: test background rejection R<sub>95</sub> of the round chosen on held-back labels, against evaluations. Stars: interactive LLM edits; circles: the automated Opus loop with no human. Black-box optimizers act on the same 24 weights with the same objective.</figcaption>
+      </figure>
+      <figure>
+        <div class="fig"><img src="assets/fig_editors.png" alt="Relative improvement in background rejection over plain fine-tuning, per LLM editor, label budget and task." loading="lazy"></div>
+        <figcaption>Pretrained taggers across label budgets: relative improvement in background rejection over plain fine-tuning, R/R<sup>FT</sup> − 1, for the LLM edit applied after fine-tuning (top) and before it (bottom).</figcaption>
+      </figure>
+    </div>
+
+    <div class="result">
+      <h3><span class="dot extract"></span>Physical laws from weights</h3>
+      <p>The quadratic form of a network trained on an invariant mass reads exactly as the Minkowski metric. In a blind benchmark of 65 hidden laws (5 built from real particles, 60 drawn blind, most of them unphysical by design so they cannot be recalled), frontier LLMs reading only the weights recover nearly every law the network itself captured, far ahead of symbolic regression run directly on the labels.</p>
+      <figure>
+        <div class="fig"><img src="assets/laws_compact.png" alt="The quadratic form of a trained network matching the Minkowski metric, the missing strangeness term, and the fraction of laws recovered against labels." loading="lazy"></div>
+        <figcaption>(a) The quadratic form of a network trained on m<sub>12</sub><sup>2</sup> is the Minkowski metric on p<sub>1</sub>+p<sub>2</sub>. (b) The network trained on weak-interaction reactions has no strangeness term. (c) Laws recovered from weights (solid) and by symbolic regression (hatched).</figcaption>
+      </figure>
+      <figure>
+        <div class="fig"><img src="assets/fig_coverage.png" alt="Fraction of 65 hidden laws recovered by LLM readers, by the trained network, and by PySR and Operon, against the number of labels." loading="lazy"></div>
+        <figcaption>Recovering 65 hidden laws. Top: all laws. Bottom: the laws the trained network itself captured, the most a reader of its weights can recover. A law counts only if the formula reaches the true law's precision outside the training range.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="code">
+    <h2>Code and data</h2>
+    <p>Every prompt, the code that builds the prompts, applies the answers to the weights and scores them, and the numbers behind every figure are in the <a href="https://github.com/chengjiang123/wsp-hep-project">repository</a>. LLM editors and readers are isolated: each answers from a fresh context with only its prompt, and rounds and variants are chosen on held-back labels, never on test data.</p>
+  </section>
+
+  <section id="cite">
+    <h2>Citation</h2>
+    <div class="bib">
+      <button class="copy" type="button" id="copy">Copy</button>
+<pre id="bibtex">@article{Jiang:2026wsphep,
+  author = {Jiang, Cheng and others},
+  title  = {Weight-Space Programming with Large Language Models
+            for High Energy and Nuclear Physics},
+  year   = {2026},
+  note   = {arXiv number to follow}
+}</pre>
+    </div>
+  </section>
+
+  <footer>Cheng Jiang <i>et al.</i>, 2026.</footer>
+</main>
+<script>
+document.getElementById('copy').addEventListener('click', function () {
+  var b = this, t = document.getElementById('bibtex').textContent;
+  try {
+    navigator.clipboard.writeText(t).then(function () { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500); });
+  } catch (e) { b.textContent = 'Select the text to copy'; }
+});
+</script>
+</body>
+</html>
