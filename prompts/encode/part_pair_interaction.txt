@@ -1,0 +1,32 @@
+You are a particle physicist who knows jet substructure and transformers. Write, by hand and without any data, the
+pair-interaction term of a Particle Transformer for jet tagging. You will not see any trained network or labelled jet.
+
+The task. Jets are anti-kT R = 0.8 jets with pT between 550 and 650 GeV, |eta| < 2, from 14 TeV pp collisions with a
+Delphes detector simulation. Signal is hadronically decaying top quarks (t -> b W -> b q q'), background is QCD
+light-quark and gluon jets. Each jet is a set of up to 128 particles (pT, eta, phi, E).
+
+The architecture. A transformer with 8 attention heads per layer acts on the particles. In every layer, before the
+softmax over j, each head h adds a bias U_h(i, j) to the attention logit of particle i attending to particle j:
+    attention_h(i, j) = softmax_j( q_i . k_j / sqrt(d) + U_h(i, j) )
+The same eight biases are used in all eight layers. Typical logits q.k/sqrt(d) are of order 1 to 5, so a bias of a few
+units already steers a head strongly. Padded particles are masked.
+U_h(i, j) depends only on four features of the pair (natural logarithms, momenta in GeV):
+    lnkT  = ln(min(pT_i, pT_j) * DeltaR_ij), pT in GeV. On real pairs: mean -0.548, sd 1.274, quantiles 1%: -3.11, 5%: -2.256, 25%: -1.25, 50%: -0.572, 75%: 0.17, 95%: 1.358, 99%: 2.209
+    lnz   = ln(min(pT_i, pT_j) / (pT_i + pT_j)). On real pairs: mean -1.865, sd 1.039, quantiles 1%: -5.151, 5%: -3.985, 25%: -2.398, 50%: -1.57, 75%: -1.055, 95%: -0.757, 99%: -0.706
+    lnDR  = ln(DeltaR_ij), DeltaR in the rapidity-azimuth plane. On real pairs: mean -1.046, sd 1.059, quantiles 1%: -3.873, 5%: -2.679, 25%: -1.433, 50%: -0.825, 75%: -0.423, 95%: -0.033, 99%: 0.191
+    lnm2  = ln(m_ij^2), invariant mass squared of the pair in GeV^2. On real pairs: mean 0.524, sd 2.248, quantiles 1%: -4.723, 5%: -2.941, 25%: -0.879, 50%: 0.509, 75%: 1.971, 95%: 4.114, 99%: 5.552
+Each head is
+    U_h = GELU( p_h(lnkT, lnz, lnDR, lnm2) )
+where p_h is a polynomial of degree at most 3 that you write, in the raw features above (not standardised).
+GELU(z) is about z for large positive z and about 0 for large negative z, with a minimum of -0.17, so a head can only
+raise the attention between some pairs relative to the rest. Values far outside the ranges above are clipped to about
+three standard deviations before the polynomial is applied.
+
+Goal: biases that make the attention heads useful for telling top jets from QCD jets, when the rest of the transformer
+is trained on only about 1000 labelled jets. Think about which pairs of particles each head should attend between, and
+give the eight heads different jobs.
+
+Answer with a short paragraph of physics reasoning for each head, then ONE JSON object in a ```json block:
+{"note": "<one line>", "heads": [{"job": "<what this head looks for>", "terms": {"1": c0, "lnDR": c1, "lnm2*lnDR": c2, "lnkT^2": c3, ...}}, ... 8 heads]}
+Term names are products of lnkT, lnz, lnDR, lnm2 joined by "*", with powers as ^2 or ^3, total degree at most 3.
+"1" is the constant. Leave out terms you do not need.

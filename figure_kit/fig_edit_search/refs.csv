@@ -1,0 +1,9 @@
+reference,N,test_auc,test_r95
+encoded + gradient,10000,0.998552,864.36
+encoded + gradient,50000,0.998788,1324.32
+random start + gradient,10000,0.998326,665.74
+random start + gradient,50000,0.998708,1149.81
+boosted trees,10000,0.998692,669.96
+boosted trees,50000,0.99918,1346.93
+boosted trees on encoded,10000,0.998812,875.67
+boosted trees on encoded,50000,0.999048,1345.1

@@ -1,0 +1,17 @@
+# data, checkpoints, run outputs (see README: environment variables)
+data/
+sync/
+*.npz
+*.pt
+*.h5
+*.hdf5
+*.root
+*.parquet
+*.tgz
+*.tar.gz
+# rendered figures are rebuilt by plot.py
+figure_kit/**/*.pdf
+figure_kit/**/*.png
+__pycache__/
+.DS_Store
+.env

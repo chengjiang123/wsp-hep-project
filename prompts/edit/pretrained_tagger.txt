@@ -1,0 +1,57 @@
+# Editing pretrained taggers: system prompt, allowed ops and user-prompt template (code/benchmark/llm_edit.py)
+
+## SYSTEM
+You are a particle physicist who edits neural-network weights directly. You never train the network. You return a JSON patch that is written into the weights as is. Reply with one JSON object only: {"reasoning": "<= 120 words", "patch": [ ... ops ... ]}.
+
+## ALLOWED OPS
+Allowed ops (each one edits weights in place, in order):
+- {"op": "head_from_rows", "signal": {ROW: coef, ...}, "background": {ROW: coef, ...}}
+    sets the 2-row output layer (weights and biases) to linear combinations of pretrained output rows.
+- {"op": "head_mix", "alpha": a, "signal": {...}, "background": {...}}
+    output layer = (1-a) * current + a * that combination (0 < a <= 1).
+- {"op": "head_scale", "factor": f}      multiply the output weights and biases by f (sharpens or softens the scores).
+- {"op": "head_bias", "delta": d}        add d to the signal output bias.
+- {"op": "pair_scale", "head": h, "factor": f}   scale pairwise-interaction head h (0-7) by f in [0, 10]:
+    f = 0 switches the head off, 0 < f < 1 weakens it, f > 1 strengthens it.
+ROW is a row name as listed in the diagnostics (e.g. "Tbqq", "QCD", "row57").
+
+## TASK TEXTS (per dataset)
+{
+ "top": "Hadronic top-quark jets (signal, t -> b q q') against QCD light-quark and gluon jets (background). Anti-kT R=0.8, pT 550-650 GeV, |eta|<2, 14 TeV pp, Delphes (TopLandscape).",
+ "qg": "Quark jets (signal) against gluon jets (background). Anti-kT R=0.4, pT 500-550 GeV, |y|<1.7, 14 TeV pp, Pythia 8 (QuarkGluon dataset, particle IDs available)."
+}
+
+## MODEL TEXTS (per checkpoint)
+{
+ "part": "Particle Transformer (ParT, 2.1M parameters) pretrained on JetClass (100M jets, 10 classes). Its pretrained output layer has one weight row per JetClass class: QCD, Hbb, Hcc, Hgg, H4q, Hqql, Zqq, Wqq, Tbqq, Tbl. Each of its 8 attention heads adds a pairwise bias U_h(i,j), computed from (ln kT, ln z, ln DeltaR, ln m^2) of particle pair (i,j), to the attention logits of all 8 particle-attention layers.",
+ "omni": "OmniLearned PET2-small, a jet foundation model pretrained on about 1 billion jets from several datasets with a 210-row output layer. Rows 2-11 are the JetClass classes QCD, Hbb, Hcc, Hgg, H4q, Hqql, Zqq, Wqq, Tbqq, Tbl; rows 0-1 are an ATLAS top-tagging set; other rows are other datasets' classes (named rowK). Each of its 8 attention heads adds a pairwise bias U_h(i,j) from pair kinematics to the attention logits."
+}
+
+## USER PROMPT, one per round (example: top / OmniLearned / edit before fine-tuning / N=1000).
+{diagnostics} = JSON computed on the training part of the label budget; {history} = previous patches with the diagnostics after each.
+
+Task: Hadronic top-quark jets (signal, t -> b q q') against QCD light-quark and gluon jets (background). Anti-kT R=0.8, pT 550-650 GeV, |eta|<2, 14 TeV pp, Delphes (TopLandscape).
+Network: OmniLearned PET2-small, a jet foundation model pretrained on about 1 billion jets from several datasets with a 210-row output layer. Rows 2-11 are the JetClass classes QCD, Hbb, Hcc, Hgg, H4q, Hqql, Zqq, Wqq, Tbqq, Tbl; rows 0-1 are an ATLAS top-tagging set; other rows are other datasets' classes (named rowK). Each of its 8 attention heads adds a pairwise bias U_h(i,j) from pair kinematics to the attention logits.
+The network is the pretrained model with a freshly initialised 2-row output layer (random weights); after your edit it will be fine-tuned on the same labelled jets.
+Label budget: 1000 labelled jets in total; the diagnostics below use only the training part of it.
+Metric to improve: separation of signal from background (AUC, background rejection at 50% signal efficiency) and the
+cross-entropy loss of the 2-row output (row 1 = signal, row 0 = background).
+
+Allowed ops (each one edits weights in place, in order):
+- {"op": "head_from_rows", "signal": {ROW: coef, ...}, "background": {ROW: coef, ...}}
+    sets the 2-row output layer (weights and biases) to linear combinations of pretrained output rows.
+- {"op": "head_mix", "alpha": a, "signal": {...}, "background": {...}}
+    output layer = (1-a) * current + a * that combination (0 < a <= 1).
+- {"op": "head_scale", "factor": f}      multiply the output weights and biases by f (sharpens or softens the scores).
+- {"op": "head_bias", "delta": d}        add d to the signal output bias.
+- {"op": "pair_scale", "head": h, "factor": f}   scale pairwise-interaction head h (0-7) by f in [0, 10]:
+    f = 0 switches the head off, 0 < f < 1 weakens it, f > 1 strengthens it.
+ROW is a row name as listed in the diagnostics (e.g. "Tbqq", "QCD", "row57").
+
+Current diagnostics (JSON):
+{diagnostics}
+
+Your previous rounds:
+{history}
+
+Return the next patch.

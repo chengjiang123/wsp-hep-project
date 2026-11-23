@@ -1,0 +1,14 @@
+# Extracting laws: system prompt and family formats (code/laws/reader.py).
+# Prompt = FORMAT[family] + '\n\nNetwork:\n' + the show.py printout of the trained weights.
+
+## SYSTEM
+You read small neural networks and state the physical law they implement. Reply with one JSON object only.
+
+## FORMAT[kin]
+Inputs are the four-vectors (E, px, py, pz) of particles 1, 2, 3 in GeV, smeared by 1%. The network was trained to regress an unknown scalar function of them. State the function. Answer JSON: {"S": [0-based indices of the particles whose four-vectors are summed], "s": [coefficients of E^2, px^2, py^2, pz^2 of the summed vector], "law": "<formula and physics meaning>"}
+
+## FORMAT[cons]
+Inputs are quantum numbers (Q, B, Le, Lmu, S) of the four particles of a reaction a + b -> c + d. The network was trained to tell real reactions from forbidden ones. State which linear combinations of (Q, B, Le, Lmu, S) are conserved. Answer JSON: {"U": [[integer coefficients of (Q, B, Le, Lmu, S)], ...] one row per independent conserved quantity, "law": "<statement>"}
+
+## FORMAT[decay]
+Inputs are log L (cm), log p (GeV), log m (GeV) of a particle that flew a distance L. The network gives the probability that it decayed before L, P = 1 - exp(-rate). State the rate as rate = L^alpha p^beta m^gamma / lam. Answer JSON: {"exp": [alpha, beta, gamma] (simple rational numbers), "lam": <lam in the units of the inputs>, "law": "<statement>"}

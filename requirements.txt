@@ -1,0 +1,19 @@
+numpy
+scipy
+pandas
+matplotlib
+scikit-learn
+torch
+lightgbm
+pyarrow
+awkward
+sympy
+requests
+openai
+anthropic
+cma
+optuna
+pytorch_optimizer
+# optional: SR baselines
+# pysr
+# pyoperon
