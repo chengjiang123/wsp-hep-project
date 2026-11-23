@@ -14,4 +14,4 @@ cd /path/to/scratch/wsp_bench/code
 module load pytorch/2.13.0
 source ../env/bin/activate
 export PYTHONUNBUFFERED=1
-python handoff.py step --cells ${CELLS:?} --line ${SLURM_ARRAY_TASK_ID} --tag ${TAG:?} --round ${ROUND:?}
+python handoff.py step --cells ${CELLS:?} --line ${SLURM_ARRAY_TASK_ID} --tag ${TAG:?} --round ${ROUND:?} --rounds ${ROUNDS:-4} --arms ${ARMS:-ft_wsp,wsp_ft}

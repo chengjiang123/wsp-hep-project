@@ -78,6 +78,8 @@ def step(a):
         tr, va = C.Split(ds, trs, tri), C.Split(ds, vas, vai)
         budget = len(tr) + len(va)
         for arm, start in ARMS.items():
+            if arm not in a.arms.split(","):
+                continue
             out = f"{C.ROOT}/results{a.tag}/{ds}/{kind}/N{N}/s{seed}"
             if os.path.exists(f"{out}/{arm}.json"):
                 continue
@@ -131,6 +133,7 @@ if __name__ == "__main__":
     ap.add_argument("--tag", required=True)
     ap.add_argument("--round", type=int, required=True)
     ap.add_argument("--rounds", type=int, default=4)
+    ap.add_argument("--arms", default="ft_wsp,wsp_ft", help="subset of arms to run (e.g. ft_wsp only for long loops)")
     ap.add_argument("--model-id", default="claude-opus-5-5 (subagent)")
     a = ap.parse_args()
     step(a) if a.cmd == "step" else ingest(a)
