@@ -1,8 +1,8 @@
 """LLM-searched boosted trees on K0S ("WSP + BDT"): the LLM writes and edits the branches of a few decision trees
 directly (feature, threshold, leaf log-odds), then LightGBM boosts on top of them with the same recipe as the plain BDT.
 
-Same data, test set, label samples, validation split and boosting recipe as v0_k0s/improve.py (plain BDT baseline):
-  DATA = nersc_results/v0_k0s/big/nom.npz, test = 30k K0S + 100k background, labels sample(tr, N, 1000*seed + N),
+Same data, test set, label samples, validation split and boosting recipe as code/k0s/improve.py (plain BDT baseline):
+  DATA = $WSP_DATA/v0_k0s/big/nom.npz (made by code/k0s/gen.py), test = 30k K0S + 100k background, labels sample(tr, N, 1000*seed + N),
   20 % of the N labels held back (early stopping of the boosting, and choice of the LLM round).
 The LLM sees only the training part (80 %) diagnostics and the held-back metrics; test metrics are never shown.
 
@@ -17,8 +17,9 @@ import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path[:0] = [HERE, os.path.join(HERE, "..", "v0_k0s")]
-os.environ.setdefault("DATA", os.path.join(HERE, "..", "nersc_results", "v0_k0s", "big", "nom.npz"))
+OUT = os.environ.get("BDT_OUT", os.path.join(HERE, "..", "..", "results", "k0s_bdt"))   # batches/, answers/, state/, results.json
+sys.path[:0] = [HERE, os.path.join(HERE, "..", "k0s")]
+os.environ.setdefault("DATA", os.path.join(os.environ.get("WSP_DATA", os.path.join(HERE, "..", "..", "data")), "v0_k0s", "big", "nom.npz"))
 os.environ.setdefault("NTEST_S", "30000")
 os.environ.setdefault("NTEST_B", "100000")
 import compat  # noqa: F401,E402  (hide the broken dask before lightgbm)
@@ -166,7 +167,7 @@ def item_id(n, seed):
 
 
 def state_path(n, seed):
-    return os.path.join(HERE, "state", item_id(n, seed) + ".json")
+    return os.path.join(OUT, "state", item_id(n, seed) + ".json")
 
 
 def load_state(n, seed):
@@ -175,7 +176,7 @@ def load_state(n, seed):
 
 
 def prep(R):
-    os.makedirs(os.path.join(HERE, "batches"), exist_ok=True)
+    os.makedirs(os.path.join(OUT, "batches"), exist_ok=True)
     for part, ns in PARTS.items():
         lines = [SYSTEM, f"\n# Round {R}. Items in this file: {len(ns) * len(SEEDS)}\n"]
         for n in ns:
@@ -191,13 +192,13 @@ def prep(R):
                 if hist:
                     it["your_previous_rounds"] = hist
                 lines.append(f"\n## {it['item']}\n```json\n{json.dumps(it, indent=None)}\n```\n")
-        f = os.path.join(HERE, "batches", f"round{R}_{part}.md")
+        f = os.path.join(OUT, "batches", f"round{R}_{part}.md")
         open(f, "w").write("".join(lines))
         print("wrote", f, os.path.getsize(f), "bytes")
 
 
 def ingest(R):
-    for f in sorted(glob.glob(os.path.join(HERE, "answers", f"round{R}_*.json"))):
+    for f in sorted(glob.glob(os.path.join(OUT, "answers", f"round{R}_*.json"))):
         A = json.load(open(f))
         for key, ens in A.items():
             n, seed = int(key.split("_")[1][1:]), int(key.split("_")[2][1:])
@@ -209,7 +210,7 @@ def ingest(R):
             except Exception as e:  # noqa: BLE001
                 ens, ev, err = dict(bias=0.0, trees=[], note=f"invalid: {e}"), evaluate(dict(bias=0.0, trees=[]), n, seed), str(e)
             st["rounds"].append(dict(round=R, ensemble=ens, error=err, survivors=diag_survivors(ens, n, seed), **ev))
-            os.makedirs(os.path.join(HERE, "state"), exist_ok=True)
+            os.makedirs(os.path.join(OUT, "state"), exist_ok=True)
             json.dump(st, open(state_path(n, seed), "w"), indent=1)
             print(key, R, "val logloss trees %.3f boost %.4f | test boost R95 %.0f (trees alone %.0f)" % (
                 ev["val"]["trees_logloss"], ev["val"]["boost_logloss"], ev["test"]["boost_r95"], ev["test"]["trees_r95"]), err or "", flush=True)
@@ -226,7 +227,7 @@ def final():
             out.append(dict(N=n, seed=seed, chosen_round=best["round"], rounds=len(st["rounds"]),
                             test_auc=best["test"]["boost_auc"], test_r95=best["test"]["boost_r95"],
                             trees_only_test_auc=best["test"]["trees_auc"], trees_only_test_r95=best["test"]["trees_r95"]))
-    json.dump(out, open(os.path.join(HERE, "results.json"), "w"), indent=1)
+    json.dump(out, open(os.path.join(OUT, "results.json"), "w"), indent=1)
     import pandas as pd
     print(pd.DataFrame(out).groupby("N")[["test_r95", "trees_only_test_r95", "chosen_round"]].median())
 

@@ -9,7 +9,7 @@
 # Black-box search on the LLM's edit space (search_edits.py). One array task = one (cell, method):
 #   BUDGET=256 sbatch -t 02:00:00 --array=1-48 search_edits.sbatch      (16 cells x cmaes, tpe, random)
 set -e
-cd /path/to/scratch/wsp_bench/code
+cd ${WSP_ROOT:?set WSP_ROOT}/code
 module load pytorch/2.13.0
 source ../env/bin/activate
 export PYTHONUNBUFFERED=1

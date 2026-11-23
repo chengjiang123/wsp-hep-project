@@ -4,7 +4,7 @@
 #   usage: TAG=_llm-sonnet55sub SUB=sonnet bash advance.sh R
 set -e
 HERE="$(cd "$(dirname "$0")" && pwd)"; R=$1
-~/opt/anaconda3/bin/python - "$HERE/${SUB:-.}" "$R" <<'PY'
+${PY:-python} - "$HERE/${SUB:-.}" "$R" <<'PY'
 import json, glob, sys
 d, R = sys.argv[1], sys.argv[2]
 a = {}

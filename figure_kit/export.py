@@ -254,7 +254,7 @@ def editors(sync):
                                                  "script_r50", "best_round"])
 
 
-RAW = os.path.join(HERE, "..", "..", "nersc_results")   # K0S edit-vs-search runs (paper Figure 4)
+RAW = os.environ.get("WSP_DATA", os.path.join(HERE, "..", "data"))   # K0S edit-vs-search runs (paper Figure 4)
 
 
 def edit_search(raw=RAW):

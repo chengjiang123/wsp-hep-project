@@ -10,7 +10,7 @@
 #   ROUND=1 TAG=_llm-opus55sub CELLS=cells_light.txt sbatch -t 00:30:00 --array=1-16 handoff.sbatch
 #   ROUND=5 ...                                           sbatch -t 03:00:00 --array=1-16 handoff.sbatch   (final: pick + FT + test)
 set -e
-cd /path/to/scratch/wsp_bench/code
+cd ${WSP_ROOT:?set WSP_ROOT}/code
 module load pytorch/2.13.0
 source ../env/bin/activate
 export PYTHONUNBUFFERED=1

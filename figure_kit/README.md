@@ -9,7 +9,7 @@ bash refresh.sh            # pull new results from Perlmutter, rebuild all CSVs,
 bash refresh.sh --final    # same, without the stamp
 python export.py           # only rebuild the CSVs from ../sync (no download)
 ```
-Python: `~/opt/anaconda3/bin/python` (matplotlib 3.9, pandas). Raw JSONs live in `../sync/`; nothing here is lost by
+Python: matplotlib 3.9, pandas (`refresh.sh` uses `$PY`, default `python`). Raw JSONs live in `../sync/`; nothing here is lost by
 re-running `export.py`.
 
 ## style.py
@@ -52,7 +52,7 @@ network + gradient). Edit `SERIES` / `VSN` / `REF_NS` in `plot.py`; `METRIC` swi
 | refs.csv | reference (encoded + gradient, random start + gradient, boosted trees, boosted trees on encoded), N, test_auc, test_r95 |
 | refs_vs_N.csv | reference (boosted trees, neural network from random weights, encoded network + gradient, LLM-written trees + boosting), N = 100 to 5e4, seed, test_auc, test_r95 |
 
-Built by `export.py` from the raw runs in `../../nersc_results` (v0_k0s/big and cborg/llm_runs).
+Built by `export.py` from the raw runs in `$WSP_DATA` (default `../data`) (v0_k0s/big and cborg/llm_runs).
 
 ## fig_editors/  (Story 1 by editing LLM: gpt-oss-120b, Sonnet 5.5, Opus 5.5)
 `plot.py` -> `fig_editors.pdf`. Relative gain in background rejection over plain FT (R30 top, R50 quark-gluon) for
