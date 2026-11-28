@@ -4,173 +4,211 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Weight-Space Programming for HEP/NP</title>
-<meta name="description" content="Physics-shaped weight-space programming: a large language model encodes, edits and extracts physics directly in the weights of neural networks for high energy and nuclear physics.">
-<meta property="og:title" content="Weight-Space Programming with LLMs for High Energy and Nuclear Physics">
-<meta property="og:description" content="An LLM encodes physics into network weights, edits them without gradients, and extracts governing laws from trained weights.">
+<meta name="description" content="Physics-shaped weight-space programming: a large language model edits, encodes and extracts physics directly in the weights of neural networks for high energy and nuclear physics.">
+<meta property="og:title" content="Weight-Space Programming with Large Language Models for High Energy and Nuclear Physics">
+<meta property="og:description" content="An LLM edits pretrained jet taggers without gradients, encodes physics as an inductive bias, reads laws from trained weights and writes a recovered symmetry back into taggers.">
 <meta property="og:image" content="assets/overview.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #fbfaf7; --surface: #ffffff; --ink: #1c1b19; --muted: #5d5a54; --line: #e4e0d8;
-  --encode: #c4262a; --edit: #d96a00; --extract: #1f6fae; --accent: #23236e;
-  --code-bg: #f3f1ec; --fig-bg: #ffffff;
+  --bg: #fdfcfa; --surface: #ffffff; --ink: #1c1b19; --muted: #625f58; --line: #e2ded6;
+  --encode: #c4262a; --edit: #d96a00; --extract: #1f6fae; --accent: #23236e; --law: #6a3fb5;
+  --gray: #8a877f; --code-bg: #f4f2ed; --fig-bg: #ffffff;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #15161a; --surface: #1d1f24; --ink: #ecebe7; --muted: #a8a59e; --line: #31343b;
-    --encode: #ff6b6b; --edit: #ffa24d; --extract: #6fb4ef; --accent: #a9a9ff;
-    --code-bg: #24272d; --fig-bg: #f6f5f2;
+    --bg: #161719; --surface: #1c1e21; --ink: #ecebe7; --muted: #a8a59e; --line: #33363c;
+    --encode: #ff6b6b; --edit: #ffa24d; --extract: #6fb4ef; --accent: #a9a9ff; --law: #b99bff;
+    --gray: #8d8a84; --code-bg: #24272d; --fig-bg: #f6f5f2;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #15161a; --surface: #1d1f24; --ink: #ecebe7; --muted: #a8a59e; --line: #31343b;
-  --encode: #ff6b6b; --edit: #ffa24d; --extract: #6fb4ef; --accent: #a9a9ff;
-  --code-bg: #24272d; --fig-bg: #f6f5f2;
+  --bg: #161719; --surface: #1c1e21; --ink: #ecebe7; --muted: #a8a59e; --line: #33363c;
+  --encode: #ff6b6b; --edit: #ffa24d; --extract: #6fb4ef; --accent: #a9a9ff; --law: #b99bff;
+  --gray: #8d8a84; --code-bg: #24272d; --fig-bg: #f6f5f2;
 }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-body {
-  margin: 0; background: var(--bg); color: var(--ink);
-  font: 17px/1.65 "Source Serif 4", Georgia, serif;
-}
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.65 "Source Serif 4", Georgia, serif; overflow-x: hidden; }
 main { max-width: 860px; margin: 0 auto; padding: 0 16px 72px; }
-header.hero { text-align: center; padding: 64px 0 28px; }
-.kicker { font: 500 13px/1 Inter, system-ui, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-h1 { font-weight: 700; font-size: clamp(28px, 5vw, 42px); line-height: 1.15; margin: 14px 0 18px; text-wrap: balance; }
-h1 .op-encode { color: var(--encode); } h1 .op-edit { color: var(--edit); } h1 .op-extract { color: var(--extract); }
+header { text-align: center; padding: 56px 0 8px; }
+h1 { font-weight: 700; font-size: clamp(27px, 4.6vw, 40px); line-height: 1.18; margin: 0 0 18px; text-wrap: balance; }
 .authors { font-size: 18px; margin: 0; }
-.links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 24px 0 8px; }
+.links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 20px 0 6px; }
 .btn {
-  display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; border-radius: 999px;
-  font: 500 15px/1 Inter, system-ui, sans-serif; text-decoration: none;
-  background: var(--ink); color: var(--bg); border: 1px solid var(--ink);
+  display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 6px;
+  font: 500 15px/1 Inter, system-ui, sans-serif; text-decoration: none; color: var(--ink); border: 1px solid var(--line); background: var(--surface);
 }
-.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
 .btn[aria-disabled="true"] { opacity: .55; pointer-events: none; }
 .btn svg { width: 16px; height: 16px; }
-figure { margin: 28px 0; }
-.fig { background: var(--fig-bg); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+
+.teaser { margin: 30px 0 0; }
+.teaser canvas { display: block; width: 100%; height: 290px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.teaser p { font: 14.5px/1.55 Inter, system-ui, sans-serif; color: var(--muted); margin: 10px 0 0; text-align: left; }
+.ops { font-weight: 600; cursor: pointer; border: 0; background: none; padding: 0; font: inherit; font-weight: 600; color: var(--muted); }
+.ops.on.edit { color: var(--edit); } .ops.on.encode { color: var(--encode); } .ops.on.extract { color: var(--extract); } .ops.on.law { color: var(--law); }
+.sep { color: var(--line); margin: 0 6px; }
+#opcap { color: var(--ink); }
+
+figure { margin: 24px 0; }
+.fig { background: var(--fig-bg); border: 1px solid var(--line); border-radius: 6px; padding: 10px; }
 .fig img { display: block; width: 100%; height: auto; }
-figcaption { font: 14.5px/1.55 Inter, system-ui, sans-serif; color: var(--muted); margin-top: 10px; }
-section { margin-top: 56px; }
-h2 { font-size: 26px; margin: 0 0 14px; }
-h3 { font: 600 19px/1.3 Inter, system-ui, sans-serif; margin: 28px 0 8px; }
+figcaption { font: 14.5px/1.55 Inter, system-ui, sans-serif; color: var(--muted); margin-top: 8px; }
+section { margin-top: 52px; }
+h2 { font-size: 26px; margin: 0 0 12px; }
+h3 { font-size: 21px; font-weight: 600; margin: 38px 0 6px; }
 p { margin: 0 0 14px; }
-.ops { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 22px 0; }
-.op { background: var(--surface); border: 1px solid var(--line); border-top: 4px solid; border-radius: 10px; padding: 16px; }
-.op h3 { margin: 0 0 6px; }
-.op p { font: 15px/1.55 Inter, system-ui, sans-serif; color: var(--muted); margin: 0; }
-.op.encode { border-top-color: var(--encode); } .op.encode h3 { color: var(--encode); }
-.op.edit { border-top-color: var(--edit); } .op.edit h3 { color: var(--edit); }
-.op.extract { border-top-color: var(--extract); } .op.extract h3 { color: var(--extract); }
-.result h3 { display: flex; align-items: center; gap: 10px; }
-.dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
-.dot.encode { background: var(--encode); } .dot.edit { background: var(--edit); } .dot.extract { background: var(--extract); }
-.two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-pre {
-  background: var(--code-bg); border: 1px solid var(--line); border-radius: 10px; padding: 16px;
-  font: 13.5px/1.5 "JetBrains Mono", ui-monospace, monospace; overflow-x: auto; margin: 0;
-}
+
+.widget { border: 1px solid var(--line); border-radius: 6px; padding: 12px; margin: 20px 0 8px; background: var(--surface); }
+.wbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; font: 14px/1.4 Inter, system-ui, sans-serif; }
+.wbar .lbl { color: var(--muted); margin-right: auto; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.seg button, .wbtn { font: 500 13.5px/1 Inter, system-ui, sans-serif; color: var(--ink); background: transparent; border: 0; padding: 8px 12px; cursor: pointer; min-height: 34px; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button.on { background: var(--ink); color: var(--bg); }
+.wbtn { border: 1px solid var(--line); border-radius: 6px; }
+.widget svg { display: block; width: 100%; height: auto; }
+.wnote { font: 13.5px/1.5 Inter, system-ui, sans-serif; color: var(--muted); margin: 6px 2px 0; }
+.gwrap { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; }
+.gwrap svg { flex: 0 1 320px; max-width: 320px; margin: 0 auto; }
+.reading { flex: 1 1 260px; min-width: 0; font: 14px/1.6 Inter, system-ui, sans-serif; }
+.prog { height: 4px; background: var(--line); overflow: hidden; margin: 6px 0 14px; }
+.prog i { display: block; height: 100%; width: 0; background: var(--extract); }
+.readout { font: 13.5px/1.6 "JetBrains Mono", ui-monospace, monospace; background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: 12px; min-height: 110px; white-space: pre-wrap; transition: opacity .5s; }
+.readout .hl { color: var(--extract); }
+.boostctl { display: flex; align-items: center; gap: 10px; flex: 1 1 260px; }
+.boostctl input[type=range] { flex: 1; accent-color: var(--law); min-width: 120px; }
+.boostctl output { font: 13.5px/1 "JetBrains Mono", ui-monospace, monospace; min-width: 70px; }
+.boost canvas { display: block; width: 100%; height: 290px; }
+.meters { display: flex; flex-wrap: wrap; gap: 4px 24px; margin-top: 8px; font: 14px/1.4 Inter, system-ui, sans-serif; color: var(--muted); }
+.meters b { font: 600 15px "JetBrains Mono", ui-monospace, monospace; }
+.meters .eu b { color: var(--gray); } .meters .mk b { color: var(--extract); }
+
+pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: 16px; font: 13.5px/1.5 "JetBrains Mono", ui-monospace, monospace; overflow-x: auto; margin: 0; }
 .bib { position: relative; }
-.copy {
-  position: absolute; top: 10px; right: 10px; font: 500 13px/1 Inter, system-ui, sans-serif;
-  background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; cursor: pointer;
-}
-footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--line); font: 14px/1.5 Inter, system-ui, sans-serif; color: var(--muted); }
+.copy { position: absolute; top: 10px; right: 10px; font: 500 13px/1 Inter, system-ui, sans-serif; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; cursor: pointer; }
+footer { margin-top: 60px; padding-top: 18px; border-top: 1px solid var(--line); font: 14px/1.5 Inter, system-ui, sans-serif; color: var(--muted); }
 a { color: var(--accent); }
 @media (max-width: 680px) {
   body { font-size: 16px; }
-  header.hero { padding-top: 40px; }
-  .ops, .two { grid-template-columns: 1fr; }
+  header { padding-top: 36px; }
+  .teaser canvas { height: 230px; }
+  .boost canvas { height: 520px; }
 }
 </style>
 </head>
 <body>
 <main>
-  <header class="hero">
-    <div class="kicker">High energy &amp; nuclear physics · machine learning</div>
+  <header>
     <h1>Weight-Space Programming with Large Language Models for High Energy and Nuclear Physics</h1>
-    <p class="authors">Cheng Jiang, Sitian Qian <i>et al.</i></p>
+    <p class="authors">Cheng Jiang, Sitian Qian, Dawei Fu, Yiping Lu, Mateusz Płoskoń</p>
     <nav class="links">
       <a class="btn" aria-disabled="true" href="#" title="arXiv link to follow">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>
         Paper (arXiv soon)</a>
-      <a class="btn ghost" href="https://github.com/chengjiang123/wsp-hep-project">
+      <a class="btn" href="https://github.com/chengjiang123/wsp-hep-project">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.3-1.69-1.3-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.78 1.2 1.78 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.4-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>
-        Code, prompts &amp; LLM interactions</a>
-      <a class="btn ghost" href="#cite">BibTeX</a>
+        Code &amp; prompts</a>
+      <a class="btn" href="#cite">BibTeX</a>
     </nav>
   </header>
 
-  <figure>
-    <div class="fig"><img src="assets/overview.png" alt="Diagram: an LLM encodes physics into a physics-shaped network built from soft cuts, smooth responses and quadratic forms, edits its weights, and extracts laws from it; gradient training on labeled data can start from the encoded weights." width="2034" height="843"></div>
-    <figcaption>Physics-shaped weight-space programming. Because every weight of the network has a physical meaning, an LLM can <b style="color:var(--encode)">encode</b> physics knowledge into the weights, <b style="color:var(--edit)">edit</b> them directly without gradient steps, and <b style="color:var(--extract)">extract</b> governing laws from trained weights. Gradient training (∇) can start from, and be regularized towards, the encoded weights.</figcaption>
-  </figure>
+  <div class="teaser">
+    <canvas id="hero" aria-label="Animation: particles of a jet stream into a physics-shaped network while an LLM edits, encodes, extracts and writes back its weights."></canvas>
+    <p><span id="opnav"></span><br><span id="opcap"></span></p>
+  </div>
 
   <section id="abstract">
     <h2>Abstract</h2>
-    <p>Jet taggers pretrained on a hundred million or more simulated jets have become a common starting point for analyses in high energy and nuclear physics. Adapting them to a new task still relies on gradient fine-tuning, which requires labeled data and compute for every task, while the physics knowledge of the analyst reaches the weights only indirectly. Weight-space programming (WSP), in which a large language model (LLM) writes and edits network weights directly, has recently emerged as an alternative to training. In this work, we introduce <em>physics-shaped</em> WSP, in which the LLM operates on weights with an explicit physical meaning, and establish it on the pretrained Particle Transformer and OmniLearned taggers. The framework comprises three operations: the LLM (i) edits weights directly from diagnostics, without gradient steps, (ii) encodes physics knowledge into weights as an inductive bias, and (iii) extracts governing laws from trained weights.</p>
-    <p>For top tagging, a training-free edit that rebuilds the output layer of the Particle Transformer from its pretrained class rows reaches a background rejection that fine-tuning attains only with several hundred thousand labeled jets, and an edit made before fine-tuning OmniLearned on a thousand jets triples the rejection. Frontier LLMs find these edits from the diagnostics, improve on a fixed two-row rule where more than two rows matter, and succeed where black-box search fails. Furthermore, the same operations extend beyond jet tagging: encoded selections of K<sup>0</sup><sub>S</sub> decays act as a prior worth several times the labeled data, direct edits match black-box optimizers with up to two orders of magnitude fewer evaluations, and frontier LLMs read nearly every hidden law captured by a small law-shaped network in a blind benchmark of 65 laws. These results establish weight space as a practical interface between physics knowledge and learned models.</p>
-  </section>
-
-  <section id="operations">
-    <h2>Three operations on the same weights</h2>
-    <div class="ops">
-      <div class="op encode"><h3>Encode</h3><p>The LLM writes physics knowledge into the weights as an inductive bias, using no data. Controls: networks trained from random weights, boosted trees and a particle-flow network.</p></div>
-      <div class="op edit"><h3>Edit</h3><p>The LLM reads diagnostics and changes the weights directly, with no gradient step. Controls: CMA-ES, TPE and random search, and fine-tuning.</p></div>
-      <div class="op extract"><h3>Extract</h3><p>The LLM reads a trained network's weights and states the law it learned, without seeing the data. Controls: PySR and Operon.</p></div>
-    </div>
-    <p>The automated runs cover six LLMs with no human in the loop, from small open-weight models to Claude Opus 5.5 and Sonnet 5.5.</p>
+    <p>The neural networks used in high energy and nuclear physics are trained almost entirely by gradient descent, and physics knowledge reaches their weights only indirectly, through features, architectures or labels. Weight-space programming (WSP), in which a large language model (LLM) writes and edits network weights directly, has recently emerged as an alternative to training. In this work, we introduce <em>physics-shaped</em> WSP, in which the LLM works on weights that have an explicit physical meaning. The LLM can edit these weights without gradient steps, encode physics knowledge into them as an inductive bias, and extract governing laws from them after training.</p>
+    <p>For top tagging with limited labeled data, a direct edit of pretrained taggers with no gradient step surpasses fine-tuning on the same data, by up to an order of magnitude in background rejection. We further show that the LLM can recover physical laws from trained weights. Writing a recovered symmetry law back into jet taggers that lack it restores the symmetry and raises their background rejection up to threefold. The same operations carry over to a cut-based particle selection and to jet reconstruction in heavy-ion collisions. These results establish weight space as a practical interface between physics knowledge and learned models.</p>
+    <figure>
+      <div class="fig"><img src="assets/overview.png" alt="Diagram: an LLM encodes physics into a physics-shaped network built from soft cuts, smooth responses and quadratic forms, edits its weights, and extracts laws from it; gradient training on labeled data can start from the encoded weights." width="1886" height="774"></div>
+      <figcaption>Physics-shaped WSP: the network is built from soft cuts, smooth responses and quadratic forms, so every weight has a physical meaning.</figcaption>
+    </figure>
   </section>
 
   <section id="results">
     <h2>Results</h2>
 
-    <div class="result">
-      <h3><span class="dot encode"></span>Physics knowledge as an inductive bias</h3>
-      <p>Across four tasks, starting from LLM-encoded weights is worth several times the labeled data. Pair interactions written by an LLM from physics alone, used as a frozen attention bias, improve a transformer trained on 10³ top-tagging jets as much as the pair interaction the Particle Transformer learned from 10⁸ jets. When their physics is scrambled, most of that gain disappears.</p>
-      <figure>
-        <div class="fig"><img src="assets/summary_ratio_top.png" alt="Ratio of the best model with encoded weights to the best model without, against the number of labels, in four tasks." loading="lazy"></div>
-        <figcaption>Best model with LLM-encoded weights over the best model without them, in background rejection, against the number of labels in four tasks. Values above one mean the encoded weights win.</figcaption>
-      </figure>
-      <figure>
-        <div class="fig"><img src="assets/part_jet_pairs.png" alt="Pair interactions between the particles of one top jet: learned by the pretrained pair network and written by Opus and Llama 4." loading="lazy"></div>
-        <figcaption>Pair interactions inside one real top jet: the network pretrained on 10⁸ jets, and heads written by Opus and by Llama 4 from physics alone.</figcaption>
-      </figure>
+    <h3 id="edit">Editing pretrained jet taggers</h3>
+    <p>With no gradient step and a thousand labeled jets, the LLM rebuilds the output layer of ParT from its pretrained class rows. It rejects 13 times more background than fine-tuning on the same jets.</p>
+    <div class="widget" id="rows">
+      <div class="wbar">
+        <span class="lbl">Top tagging, ParT, 10³ labels</span>
+        <span class="seg"><button type="button" data-mode="ft">Fine-tuning</button><button type="button" data-mode="wsp">LLM edit</button></span>
+        <button type="button" class="wbtn" data-replay>Replay</button>
+      </div>
+      <svg id="rowsSvg" role="img" aria-label="The ten JetClass output rows of the pretrained ParT; the LLM copies the top-quark row into the signal row and the QCD row into the background row of the new head, and the background rejection rises from 103 to 1545."></svg>
+      <p class="wnote" id="rowsNote"></p>
     </div>
+    <figure>
+      <div class="fig"><img src="assets/fig_editors.png" alt="Gain in background rejection over plain fine-tuning for edits by three LLMs, applied after fine-tuning (top) and before it (bottom), for top tagging and quark-gluon discrimination with ParT and OmniLearned." loading="lazy" width="1727" height="1017"></div>
+      <figcaption>Gain over plain fine-tuning for ParT and OmniLearned. Top: edit after fine-tuning. Bottom: edit before fine-tuning.</figcaption>
+    </figure>
 
-    <div class="result">
-      <h3><span class="dot edit"></span>Direct weight editing</h3>
-      <p>On a K<sup>0</sup><sub>S</sub> selection, direct LLM edits reach the background rejection of CMA-ES, TPE and random search on the same weights with up to two orders of magnitude fewer evaluations, and every edit is a physics statement. On heavy-ion jets, an edit restricted to the inputs the LLM predicted to be safe removes a bias that no training sample showed. On pretrained ParT and OmniLearned taggers, frontier LLM edits raise the rejection over plain fine-tuning on the same labels, both after fine-tuning and before it.</p>
-      <figure>
-        <div class="fig"><img src="assets/fig_edit_search.png" alt="Test background rejection against the number of evaluations, for LLM edits and for CMA-ES, TPE and random search." loading="lazy"></div>
-        <figcaption>K<sup>0</sup><sub>S</sub> selection: test background rejection R<sub>95</sub> of the round chosen on held-back labels, against evaluations. Stars: interactive LLM edits; circles: the automated Opus loop with no human. Black-box optimizers act on the same 24 weights with the same objective.</figcaption>
-      </figure>
-      <figure>
-        <div class="fig"><img src="assets/fig_editors.png" alt="Relative improvement in background rejection over plain fine-tuning, per LLM editor, label budget and task." loading="lazy"></div>
-        <figcaption>Pretrained taggers across label budgets: relative improvement in background rejection over plain fine-tuning, R/R<sup>FT</sup> − 1, for the LLM edit applied after fine-tuning (top) and before it (bottom).</figcaption>
-      </figure>
-    </div>
+    <h3 id="encode">Encoding the pair interaction</h3>
+    <p>Pair interactions written by an LLM from physics alone improve a transformer trained on a thousand jets about as much as ParT's own learned pair interaction.</p>
+    <figure>
+      <div class="fig"><img src="assets/part_jet_pairs.png" alt="Pair interactions inside one real top jet: the pretrained pair network and heads encoded by Opus and Llama 4 from physics alone." loading="lazy" width="1914" height="933"></div>
+      <figcaption>Pair interactions inside one top jet: pretrained on 10⁸ jets, and written by Opus and by Llama 4.</figcaption>
+    </figure>
 
-    <div class="result">
-      <h3><span class="dot extract"></span>Physical laws from weights</h3>
-      <p>The quadratic form of a network trained on an invariant mass reads exactly as the Minkowski metric. In a blind benchmark of 65 hidden laws (5 built from real particles, 60 drawn blind, most of them unphysical by design so they cannot be recalled), frontier LLMs reading only the weights recover nearly every law the network itself captured, far ahead of symbolic regression run directly on the labels.</p>
-      <figure>
-        <div class="fig"><img src="assets/laws_compact.png" alt="The quadratic form of a trained network matching the Minkowski metric, the missing strangeness term, and the fraction of laws recovered against labels." loading="lazy"></div>
-        <figcaption>(a) The quadratic form of a network trained on m<sub>12</sub><sup>2</sup> is the Minkowski metric on p<sub>1</sub>+p<sub>2</sub>. (b) The network trained on weak-interaction reactions has no strangeness term. (c) Laws recovered from weights (solid) and by symbolic regression (hatched).</figcaption>
-      </figure>
-      <figure>
-        <div class="fig"><img src="assets/fig_coverage.png" alt="Fraction of 65 hidden laws recovered by LLM readers, by the trained network, and by PySR and Operon, against the number of labels." loading="lazy"></div>
-        <figcaption>Recovering 65 hidden laws. Top: all laws. Bottom: the laws the trained network itself captured, the most a reader of its weights can recover. A law counts only if the formula reaches the true law's precision outside the training range.</figcaption>
-      </figure>
+    <h3 id="extract">Laws recovered from trained weights</h3>
+    <p>From the weights alone, the LLM states the law a small network has learned, including unphysical laws that cannot be recalled from textbooks.</p>
+    <div class="widget" id="gw">
+      <div class="wbar">
+        <span class="lbl">Network trained on m<sub>12</sub><sup>2</sup></span>
+        <button type="button" class="wbtn" data-replay>Replay</button>
+      </div>
+      <div class="gwrap">
+        <svg id="gSvg" viewBox="0 0 320 320" role="img" aria-label="The 8 by 8 matrix G over the energies and momenta of two particles, evolving from random values to the Minkowski metric on p1 plus p2."></svg>
+        <div class="reading">
+          <div id="gPhase" style="color:var(--muted)">training</div>
+          <div class="prog"><i id="gProg"></i></div>
+          <div class="readout" id="gRead"></div>
+        </div>
+      </div>
     </div>
+    <figure>
+      <div class="fig"><img src="assets/laws_compact.png" alt="The quadratic form of a trained network matching the Minkowski metric, the missing strangeness term, and the hidden laws recovered against labels." loading="lazy" width="1726" height="681"></div>
+      <figcaption>(a) The Minkowski metric in the weights. (b) No strangeness term. (c) Laws recovered from weights (solid) and by symbolic regression (hatched).</figcaption>
+    </figure>
+    <figure>
+      <div class="fig"><img src="assets/fig_coverage.png" alt="Fraction of 65 hidden laws recovered by three LLMs reading weights and by PySR and Operon fitting the data, against the number of labels." loading="lazy" width="1415" height="1090"></div>
+      <figcaption>Blind benchmark of 65 hidden laws: LLMs reading the weights against symbolic regression on the labels.</figcaption>
+    </figure>
+
+    <h3 id="bridge">The recovered law in jet taggers</h3>
+    <p>The LLM writes the recovered Minkowski metric back into LorentzNet and L-GATr. Their rejection rises 1.4 to 3 times, and their output no longer changes under a common boost of jet and beams.</p>
+    <div class="widget boost" id="boost">
+      <div class="wbar">
+        <span class="boostctl"><input type="range" id="yb" min="-1" max="1" step="0.01" value="0" aria-label="Boost rapidity"><output id="ybv">y = 0.00</output></span>
+        <button type="button" class="wbtn" id="ybplay">Pause</button>
+      </div>
+      <canvas id="boostCv" aria-label="Left: a toy jet and the two beam directions in the x–z plane, boosted along the beam. Right: the score of a toy tagger against the boost rapidity, drifting with the Euclidean product and flat with the Minkowski metric."></canvas>
+      <div class="meters"><span class="eu">Euclidean <b id="mEu">0.600</b></span><span class="mk">Minkowski <b id="mMk">0.600</b></span></div>
+      <p class="wnote">Toy score from inner products of particle and beam four-vectors, not the trained taggers.</p>
+    </div>
+    <figure>
+      <div class="fig"><img src="assets/fig_bridge.png" alt="Rejection at 30 percent signal efficiency and violation under a beam boost against labeled jets, for LorentzNet and L-GATr, without and with the law written by an LLM." loading="lazy" width="1464" height="1154"></div>
+      <figcaption>LorentzNet (top) and L-GATr (bottom), without the law (gray) and after the LLM wrote it (blue).</figcaption>
+    </figure>
+
+    <h3 id="more">Further applications</h3>
+    <p>For a K<sup>0</sup><sub>S</sub> selection, LLM-encoded cuts act as a prior worth several times the labeled data, and direct edits match black-box optimizers with far fewer evaluations. For heavy-ion jets, an edit improves the momentum resolution without a fragmentation bias.</p>
+    <div class="fig" style="margin:20px 0 8px"><img src="assets/summary_ratio_top.png" alt="Ratio of the best model with LLM-encoded weights to the best model without, against the number of labels, for four tasks." loading="lazy" width="1632" height="556"></div>
+    <figure style="margin-top:12px">
+      <div class="fig"><img src="assets/fig_edit_search.png" alt="Test background rejection against the number of evaluations, for LLM edits and for CMA-ES, TPE and random search." loading="lazy" width="1877" height="867"></div>
+      <figcaption>Top: encoded weights over no encoding, four tasks. Bottom: LLM edits against CMA-ES, TPE and random search on K<sup>0</sup><sub>S</sub>.</figcaption>
+    </figure>
   </section>
 
   <section id="code">
     <h2>Code and data</h2>
-    <p>Every prompt, the code that builds the prompts, applies the answers to the weights and scores them, and the numbers behind every figure are in the <a href="https://github.com/chengjiang123/wsp-hep-project">repository</a>. LLM editors and readers are isolated: each answers from a fresh context with only its prompt, and rounds and variants are chosen on held-back labels, never on test data.</p>
+    <p>Prompts, every LLM interaction of the automated runs and the code behind each figure are in the <a href="https://github.com/chengjiang123/wsp-hep-project">repository</a>.</p>
   </section>
 
   <section id="cite">
@@ -178,7 +216,8 @@ a { color: var(--accent); }
     <div class="bib">
       <button class="copy" type="button" id="copy">Copy</button>
 <pre id="bibtex">@article{Jiang:2026wsphep,
-  author = {Jiang, Cheng and Qian, Sitian and others},
+  author = {Jiang, Cheng and Qian, Sitian and Fu, Dawei and
+            Lu, Yiping and P{\l}osko{\'n}, Mateusz},
   title  = {Weight-Space Programming with Large Language Models
             for High Energy and Nuclear Physics},
   year   = {2026},
@@ -187,15 +226,477 @@ a { color: var(--accent); }
     </div>
   </section>
 
-  <footer>Cheng Jiang, Sitian Qian <i>et al.</i>, 2026.</footer>
+  <footer>Cheng Jiang, Sitian Qian, Dawei Fu, Yiping Lu, Mateusz Płoskoń, 2026.</footer>
 </main>
 <script>
+(function () {
+'use strict';
+var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var C = {};
+function readColors() {
+  var s = getComputedStyle(document.documentElement);
+  ['--bg','--surface','--ink','--muted','--line','--encode','--edit','--extract','--accent','--law','--gray','--code-bg'].forEach(function (k) {
+    C[k.slice(2)] = s.getPropertyValue(k).trim();
+  });
+}
+readColors();
+var listeners = [];
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () { readColors(); listeners.forEach(function (f) { f(); }); });
+function rgba(hex, a) {
+  hex = hex.replace('#', '');
+  if (hex.length === 3) hex = hex.split('').map(function (c) { return c + c; }).join('');
+  var n = parseInt(hex, 16);
+  return 'rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + a + ')';
+}
+function mulberry(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function gauss(r) { var u = r() || 1e-9, v = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+function ease(t) { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); }
+function onVisible(el, fn, once) {
+  var io = new IntersectionObserver(function (es) { es.forEach(function (e) { fn(e.isIntersecting); if (once && e.isIntersecting) io.disconnect(); }); }, { threshold: 0.2 });
+  io.observe(el);
+}
+
+/* ---------- teaser animation ---------- */
+(function hero() {
+  var cv = document.getElementById('hero'), ctx = cv.getContext('2d');
+  var nav = document.getElementById('opnav'), cap = document.getElementById('opcap');
+  var STEPS = [
+    { op: 'Edit', col: 'edit', cap: 'The LLM rebuilds the output layer of a pretrained tagger from its class rows, with no gradient step.', tgt: 'out', dir: 1 },
+    { op: 'Encode', col: 'encode', cap: 'The LLM writes the pair interaction of a transformer from physics alone, before any training.', tgt: 'l0', dir: 1 },
+    { op: 'Extract', col: 'extract', cap: 'The LLM reads the law a trained network has learned from its weights.', tgt: 'quad', dir: -1 },
+    { op: 'Write back', col: 'law', cap: 'The LLM writes the recovered law into taggers that lack it.', tgt: 'all', dir: 1 }
+  ];
+  var W, H, dpr, nodes = [], edges = [], parts = [], sigs = [], pulses = [], O, LLM, step = 0, stepT = 0, last = 0, running = false, spawnAcc = 0, pulseAcc = 0, outGlow = 0;
+  var rnd = mulberry(7), btns = [];
+  STEPS.forEach(function (s, i) {
+    if (i) { var sp = document.createElement('span'); sp.className = 'sep'; sp.textContent = '/'; nav.appendChild(sp); }
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'ops ' + s.col; b.textContent = s.op;
+    b.addEventListener('click', function () { setStep(i); }); nav.appendChild(b); btns.push(b);
+  });
+  function setStep(i) {
+    step = i; stepT = 0;
+    btns.forEach(function (b, j) { b.classList.toggle('on', j === i); });
+    cap.textContent = STEPS[i].cap;
+  }
+  function layout() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var narrow = W < 560;
+    O = { x: W * (narrow ? 0.07 : 0.08), y: H * 0.62 };
+    var xs = narrow ? [0.44, 0.63, 0.82] : [0.42, 0.56, 0.70];
+    var counts = [4, 3, 1], kinds = [['cut', 'smooth', 'quad', 'cut'], ['quad', 'cut', 'smooth'], ['out']];
+    var r = narrow ? 11 : 14, gap = H * 0.15;
+    nodes = []; edges = [];
+    var layers = [];
+    counts.forEach(function (n, li) {
+      var L = [];
+      for (var k = 0; k < n; k++) {
+        var nd = { x: W * xs[li], y: H * 0.6 + (k - (n - 1) / 2) * gap, r: li === 2 ? r + 3 : r, kind: kinds[li][k], layer: li, flash: 0, tint: 0, tcol: 'edit' };
+        L.push(nd); nodes.push(nd);
+      }
+      layers.push(L);
+    });
+    for (var li = 0; li < 2; li++) layers[li].forEach(function (a) { layers[li + 1].forEach(function (b) { edges.push({ a: a, b: b, glow: 0 }); }); });
+    LLM = { x: W * (narrow ? 0.63 : 0.56), y: H * 0.14, s: narrow ? 30 : 36, flash: 0 };
+    hero.layers = layers; hero.narrow = narrow;
+  }
+  function spawnParticle() {
+    var L0 = hero.layers[0], tgt = L0[Math.floor(rnd() * L0.length)];
+    var dx = tgt.x - O.x, dy = tgt.y - O.y, ang = Math.atan2(dy, dx) + gauss(rnd) * 0.22;
+    var d = Math.hypot(dx, dy) * (0.45 + rnd() * 0.15);
+    parts.push({ t: 0, sp: 0.55 + rnd() * 0.5, tgt: tgt, cx: O.x + Math.cos(ang) * d, cy: O.y + Math.sin(ang) * d, hist: [], e: rnd() });
+  }
+  function bez(p, t) { var u = 1 - t; return { x: u * u * O.x + 2 * u * t * p.cx + t * t * p.tgt.x, y: u * u * O.y + 2 * u * t * p.cy + t * t * p.tgt.y }; }
+  function sendSig(from) {
+    var outs = edges.filter(function (e) { return e.a === from; });
+    if (!outs.length) { outGlow = 1; return; }
+    var e = outs[Math.floor(rnd() * outs.length)]; e.glow = 1;
+    sigs.push({ e: e, t: 0 });
+  }
+  function firePulses() {
+    var s = STEPS[step], targets;
+    if (s.tgt === 'out') targets = [hero.layers[2][0]];
+    else if (s.tgt === 'l0') targets = [hero.layers[0][Math.floor(rnd() * 4)]];
+    else if (s.tgt === 'quad') targets = nodes.filter(function (n) { return n.kind === 'quad'; });
+    else targets = nodes.filter(function (n) { return n.kind === 'quad' || n.kind === 'out'; });
+    targets.forEach(function (n) { pulses.push({ n: n, t: 0, dir: s.dir, col: s.col, bend: (rnd() - 0.5) * 80 }); });
+    if (s.dir > 0) LLM.flash = 1;
+  }
+  function glyph(n, col) {
+    var r = n.r * 0.6, i, x, y; ctx.beginPath();
+    if (n.kind === 'cut') { for (i = 0; i <= 16; i++) { x = -r + 2 * r * i / 16; y = -Math.tanh(x / r * 4) * r * 0.6; i ? ctx.lineTo(n.x + x, n.y + y) : ctx.moveTo(n.x + x, n.y + y); } }
+    else if (n.kind === 'smooth') { for (i = 0; i <= 16; i++) { x = -r + 2 * r * i / 16; y = -Math.tanh(x / r * 1.2) * r * 0.55; i ? ctx.lineTo(n.x + x, n.y + y) : ctx.moveTo(n.x + x, n.y + y); } }
+    else if (n.kind === 'quad') { for (i = 0; i <= 16; i++) { x = -r + 2 * r * i / 16; y = r * 0.6 - (x * x) / r * 1.1; i ? ctx.lineTo(n.x + x, n.y - y + r * 0.1) : ctx.moveTo(n.x + x, n.y - y + r * 0.1); } }
+    else { ctx.arc(n.x, n.y, r * 0.45, 0, 7); }
+    ctx.strokeStyle = col; ctx.lineWidth = 1.6; ctx.stroke();
+  }
+  function star(x, y, s, col) {
+    ctx.beginPath();
+    for (var i = 0; i < 8; i++) { var a = i * Math.PI / 4 - Math.PI / 2, rr = i % 2 ? s * 0.28 : s; ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); }
+    ctx.closePath(); ctx.fillStyle = col; ctx.fill();
+  }
+  function draw(dt) {
+    var s = STEPS[step], col = C[s.col];
+    ctx.clearRect(0, 0, W, H);
+    ctx.strokeStyle = C.line; ctx.lineWidth = 1; ctx.setLineDash([4, 5]);
+    ctx.beginPath(); ctx.moveTo(4, O.y); ctx.lineTo(O.x + 40, O.y); ctx.stroke(); ctx.setLineDash([]);
+    edges.forEach(function (e) {
+      e.glow = Math.max(0, e.glow - dt * 1.6);
+      ctx.strokeStyle = e.glow > 0.02 ? rgba(C.ink, 0.12 + 0.35 * e.glow) : C.line;
+      ctx.lineWidth = 1 + e.glow; ctx.beginPath(); ctx.moveTo(e.a.x, e.a.y); ctx.lineTo(e.b.x, e.b.y); ctx.stroke();
+    });
+    var out = hero.layers[2][0];
+    outGlow = Math.max(0, outGlow - dt * 1.2);
+    ctx.strokeStyle = C.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(out.x + out.r, out.y); ctx.lineTo(out.x + out.r + (hero.narrow ? 18 : 40), out.y); ctx.stroke();
+    parts.forEach(function (p) {
+      p.t += dt * p.sp;
+      var q = bez(p, Math.min(p.t, 1)); p.hist.push(q); if (p.hist.length > 9) p.hist.shift();
+      ctx.beginPath(); p.hist.forEach(function (h, i) { i ? ctx.lineTo(h.x, h.y) : ctx.moveTo(h.x, h.y); });
+      var pc = p.e > 0.8 ? C.edit : (p.e > 0.45 ? C.law : C.accent);
+      ctx.strokeStyle = rgba(pc, 0.35); ctx.lineWidth = 1.2 + p.e; ctx.stroke();
+      ctx.beginPath(); ctx.arc(q.x, q.y, 1.4 + p.e * 2.2, 0, 7); ctx.fillStyle = pc; ctx.fill();
+      if (p.t >= 1 && !p.done) { p.done = true; p.tgt.flash = 1; if (rnd() < 0.7) sendSig(p.tgt); }
+    });
+    parts = parts.filter(function (p) { return !p.done; });
+    sigs.forEach(function (g) {
+      g.t += dt * 1.8;
+      var x = g.e.a.x + (g.e.b.x - g.e.a.x) * g.t, y = g.e.a.y + (g.e.b.y - g.e.a.y) * g.t;
+      ctx.beginPath(); ctx.arc(x, y, 2.2, 0, 7); ctx.fillStyle = C.ink; ctx.fill();
+      if (g.t >= 1 && !g.done) { g.done = true; g.e.b.flash = 1; if (g.e.b.kind === 'out') outGlow = 1; else if (rnd() < 0.8) sendSig(g.e.b); }
+    });
+    sigs = sigs.filter(function (g) { return !g.done; });
+    pulses.forEach(function (p) {
+      p.t += dt * 0.9;
+      var a = p.dir > 0 ? LLM : p.n, b = p.dir > 0 ? p.n : LLM;
+      var mx = (a.x + b.x) / 2 + p.bend, my = (a.y + b.y) / 2 - 30;
+      ctx.beginPath();
+      var t0 = Math.max(0, p.t - 0.35), t1 = Math.min(1, p.t), i, t, u, x, y;
+      for (i = 0; i <= 14; i++) { t = t0 + (t1 - t0) * i / 14; u = 1 - t; x = u * u * a.x + 2 * u * t * mx + t * t * b.x; y = u * u * a.y + 2 * u * t * my + t * t * b.y; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+      ctx.strokeStyle = C[p.col]; ctx.lineWidth = 2.4; ctx.lineCap = 'round'; ctx.stroke();
+      if (p.t <= 1) {
+        u = 1 - t1; var hx = u * u * a.x + 2 * u * t1 * mx + t1 * t1 * b.x, hy = u * u * a.y + 2 * u * t1 * my + t1 * t1 * b.y;
+        ctx.beginPath(); ctx.arc(hx, hy, 7, 0, 7); ctx.fillStyle = rgba(C[p.col], 0.18); ctx.fill();
+        ctx.beginPath(); ctx.arc(hx, hy, 3.2, 0, 7); ctx.fillStyle = C[p.col]; ctx.fill();
+      }
+      if (p.t >= 1 && !p.hit) { p.hit = true; if (p.dir > 0) { p.n.tint = 1; p.n.tcol = p.col; } else LLM.flash = 1; }
+    });
+    pulses = pulses.filter(function (p) { return p.t < 1.35; });
+    nodes.forEach(function (n) {
+      n.flash = Math.max(0, n.flash - dt * 2.5); n.tint = Math.max(0, n.tint - dt * 0.45);
+      var extra = n.kind === 'out' ? outGlow : 0;
+      if (n.tint > 0.01) { ctx.beginPath(); ctx.arc(n.x, n.y, n.r + 7 * n.tint, 0, 7); ctx.fillStyle = rgba(C[n.tcol], 0.16 * n.tint); ctx.fill(); }
+      ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, 7); ctx.fillStyle = C.bg; ctx.fill();
+      ctx.lineWidth = 1.4 + n.flash + extra; ctx.strokeStyle = n.tint > 0.05 ? C[n.tcol] : (n.flash + extra > 0.05 ? C.ink : C.muted); ctx.stroke();
+      glyph(n, n.tint > 0.05 ? C[n.tcol] : C.ink);
+    });
+    LLM.flash = Math.max(0, LLM.flash - dt * 1.8);
+    var S = LLM.s;
+    ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(LLM.x - S / 2, LLM.y - S / 2, S, S, 6); else ctx.rect(LLM.x - S / 2, LLM.y - S / 2, S, S);
+    ctx.fillStyle = rgba(col, 0.1 + 0.2 * LLM.flash); ctx.fill(); ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.stroke();
+    star(LLM.x, LLM.y, S * 0.32 * (1 + 0.15 * LLM.flash), col);
+    ctx.beginPath(); ctx.arc(O.x, O.y, 5, 0, 7); ctx.fillStyle = C.ink; ctx.fill();
+    ctx.font = '500 12px Inter, system-ui, sans-serif'; ctx.fillStyle = C.muted; ctx.textAlign = 'center';
+    ctx.fillText('jet', O.x, O.y + 24);
+    ctx.fillText('LLM', LLM.x, LLM.y + S / 2 + 15);
+    var l0 = hero.layers[0];
+    ctx.fillText('physics-shaped network', (l0[0].x + out.x) / 2, l0[l0.length - 1].y + l0[0].r + 22);
+    ctx.textAlign = 'left'; ctx.fillText('score', out.x + out.r + (hero.narrow ? 4 : 10), out.y - 8);
+  }
+  function frame(t) {
+    if (!running) return;
+    var dt = Math.min(0.05, (t - last) / 1000 || 0); last = t;
+    stepT += dt; spawnAcc += dt; pulseAcc += dt;
+    while (spawnAcc > 0.045) { spawnAcc -= 0.045; spawnParticle(); }
+    if (pulseAcc > 0.85) { pulseAcc = 0; firePulses(); }
+    if (stepT > 5.2) setStep((step + 1) % STEPS.length);
+    draw(dt);
+    requestAnimationFrame(frame);
+  }
+  function staticFrame() {
+    parts = []; pulses = [];
+    for (var i = 0; i < 40; i++) spawnParticle();
+    parts.forEach(function (p) { p.t = rnd() * 0.95; p.hist = [bez(p, Math.max(0, p.t - 0.08)), bez(p, p.t)]; p.sp = 0; });
+    firePulses(); pulses.forEach(function (p) { p.t = 0.7; });
+    draw(0);
+  }
+  layout(); setStep(0);
+  window.addEventListener('resize', function () { layout(); if (reduce) staticFrame(); });
+  listeners.push(function () { if (reduce) staticFrame(); });
+  if (reduce) { staticFrame(); return; }
+  onVisible(cv, function (v) { if (v && !running) { running = true; last = performance.now(); requestAnimationFrame(frame); } else if (!v) running = false; });
+})();
+
+/* ---------- class-row edit widget ---------- */
+(function rowsWidget() {
+  var root = document.getElementById('rows'), svg = document.getElementById('rowsSvg'), note = document.getElementById('rowsNote');
+  var NS = 'http://www.w3.org/2000/svg';
+  var CLS = ['QCD', 'H→bb̄', 'H→cc̄', 'H→gg', 'H→4q', 'H→ℓνqq′', 'Z→qq̄', 'W→qq′', 't→bqq′', 't→bℓν'];
+  var SIG = 8, BKG = 0, NC = 16;
+  var r = mulberry(11), vals = CLS.map(function () { var a = []; for (var k = 0; k < NC; k++) a.push(Math.max(-1, Math.min(1, gauss(r) * 0.55))); return a; });
+  var BARS = [
+    { name: 'Fine-tuning, 10³ jets', v: 103, key: 'ft' },
+    { name: 'LLM edit, no gradient step, 10³ jets', v: 1545, key: 'wsp' },
+    { name: 'Fine-tuning, all 1.2 M jets', v: 2766, key: 'ref' }
+  ];
+  var mode = 'ft', t0 = 0, raf = 0, G = {}, L;
+  function el(tag, attrs, parent, text) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; (parent || svg).appendChild(e); return e; }
+  function cellColor(v) { return v >= 0 ? rgba(C.encode, 0.15 + 0.75 * v) : rgba(C.extract, 0.15 + 0.75 * -v); }
+  function build() {
+    var w = svg.getBoundingClientRect().width || 800, narrow = w < 600;
+    L = narrow
+      ? { W: 400, H: 640, rx: 12, cx: 98, cs: 13, cg: 3, ry: 30, rdy: 25, hx: 12, hcx: 98, hy: 332, hdy: 30, bx: 12, by: 450, bw: 376, bdy: 52, tx: 12, ty: 412 }
+      : { W: 820, H: 340, rx: 14, cx: 104, cs: 14, cg: 3, ry: 32, rdy: 29, hx: 470, hcx: 530, hy: 46, hdy: 32, bx: 470, by: 186, bw: 330, bdy: 48, tx: 470, ty: 136 };
+    svg.setAttribute('viewBox', '0 0 ' + L.W + ' ' + L.H);
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var f = 'font-family:Inter,system-ui,sans-serif;';
+    el('text', { x: L.rx, y: 22, style: f + 'font-size:13px;font-weight:600;fill:' + C.ink }, null, 'Pretrained output layer');
+    G.rows = []; G.cells = [];
+    CLS.forEach(function (name, i) {
+      var y = L.ry + 12 + i * L.rdy;
+      var g = el('g', {});
+      el('text', { x: L.rx, y: y + L.cs * 0.8, style: f + 'font-size:13px;fill:' + C.ink }, g, name);
+      var cs = [];
+      vals[i].forEach(function (v, k) { cs.push(el('rect', { x: L.cx + k * (L.cs + L.cg), y: y, width: L.cs, height: L.cs, rx: 2, fill: cellColor(v) }, g)); });
+      G.rows.push(g); G.cells.push(cs);
+    });
+    el('text', { x: L.hx, y: L.hy - 20, style: f + 'font-size:13px;font-weight:600;fill:' + C.ink }, null, 'New top-tagging head');
+    G.head = [];
+    ['w_sig', 'w_bkg'].forEach(function (nm, j) {
+      var y = L.hy + j * L.hdy;
+      el('text', { x: L.hx, y: y + L.cs * 0.8, style: 'font-family:JetBrains Mono,monospace;font-size:13px;fill:' + C.ink }, null, nm);
+      var cs = []; for (var k = 0; k < NC; k++) cs.push(el('rect', { x: L.hcx + k * (L.cs + L.cg), y: y, width: L.cs, height: L.cs, rx: 2, fill: C.line }));
+      G.head.push(cs);
+    });
+    G.fly = el('g', {});
+    G.status = el('text', { x: L.tx, y: L.ty, style: f + 'font-size:12.5px' });
+    el('text', { x: L.bx, y: L.by - 14, style: f + 'font-size:13px;font-weight:600;fill:' + C.ink }, null, 'Background rejection R₃₀');
+    G.bars = [];
+    BARS.forEach(function (b, i) {
+      var y = L.by + i * L.bdy;
+      el('text', { x: L.bx, y: y + 4, style: f + 'font-size:12px;fill:' + C.muted }, null, b.name);
+      el('rect', { x: L.bx, y: y + 10, width: L.bw, height: 16, rx: 2, fill: rgba(C.ink, 0.05) });
+      var col = b.key === 'wsp' ? C.edit : (b.key === 'ft' ? C.gray : rgba(C.ink, 0.35));
+      var rect = el('rect', { x: L.bx, y: y + 10, width: 0, height: 16, rx: 2, fill: col });
+      var lab = el('text', { x: L.bx + 6, y: y + 22, style: 'font-family:JetBrains Mono,monospace;font-size:12px;font-weight:600;fill:' + C.ink }, null, '');
+      G.bars.push({ rect: rect, lab: lab, b: b });
+    });
+    [10, 100, 1000, 10000].forEach(function (v) {
+      var x = bx(v);
+      el('line', { x1: x, x2: x, y1: L.by + 2 * L.bdy + 30, y2: L.by + 2 * L.bdy + 34, stroke: C.muted });
+      el('text', { x: x, y: L.by + 2 * L.bdy + 46, 'text-anchor': v === 10 ? 'start' : (v === 10000 ? 'end' : 'middle'), style: f + 'font-size:11px;fill:' + C.muted }, null, v >= 1000 ? (v / 1000) + 'k' : v);
+    });
+    render(reduce ? 1 : 0);
+  }
+  function bx(v) { return L.bx + Math.max(0, (Math.log10(v) - 1) / 3) * L.bw; }
+  function render(p) {
+    var wsp = mode === 'wsp';
+    G.rows.forEach(function (g, i) {
+      var on = wsp && (i === SIG || i === BKG);
+      g.setAttribute('opacity', wsp ? (on ? 1 : 1 - 0.65 * ease(p * 2)) : 1 - 0.55 * ease(p * 2));
+    });
+    var hr = mulberry(Math.floor(p * 9) + 3);
+    G.head.forEach(function (cs, j) {
+      cs.forEach(function (c, k) {
+        var v;
+        if (wsp) { v = p > 0.75 ? vals[j === 0 ? SIG : BKG][k] : null; c.setAttribute('fill', v == null ? C.line : cellColor(v)); }
+        else { v = p < 0.6 ? gauss(hr) * 0.5 : gauss(mulberry(100 + j * NC + k)) * 0.45; c.setAttribute('fill', cellColor(Math.max(-1, Math.min(1, v)))); }
+      });
+    });
+    while (G.fly.firstChild) G.fly.removeChild(G.fly.firstChild);
+    if (wsp && p > 0.15 && p < 0.8) {
+      [SIG, BKG].forEach(function (ri, j) {
+        vals[ri].forEach(function (v, k) {
+          var q = ease((p - 0.15 - k * 0.012) / 0.5);
+          var x0 = L.cx + k * (L.cs + L.cg), y0 = L.ry + 12 + ri * L.rdy, x1 = L.hcx + k * (L.cs + L.cg), y1 = L.hy + j * L.hdy;
+          var x = x0 + (x1 - x0) * q, y = y0 + (y1 - y0) * q - Math.sin(q * Math.PI) * 26;
+          el('rect', { x: x, y: y, width: L.cs, height: L.cs, rx: 2, fill: cellColor(v), stroke: C.edit, 'stroke-width': 1 }, G.fly);
+        });
+      });
+    }
+    G.status.textContent = wsp ? 't→bqq′ row → signal, QCD row → background' : 'random weights, then trained';
+    G.status.style.fill = wsp ? C.edit : C.muted;
+    G.bars.forEach(function (o) {
+      var show = o.b.key === 'ref' || o.b.key === 'ft' || (o.b.key === 'wsp' && wsp);
+      var q = o.b.key === 'ref' ? 1 : ease((p - (o.b.key === 'wsp' ? 0.6 : 0.3)) / 0.4);
+      if (!show) q = 0;
+      var v = Math.pow(10, 1 + (Math.log10(o.b.v) - 1) * q);
+      o.rect.setAttribute('width', Math.max(0, (bx(v) - L.bx)));
+      o.lab.textContent = q > 0.02 ? Math.round(q >= 1 ? o.b.v : v) : '';
+      o.lab.setAttribute('x', Math.min(bx(v) + 6, L.bx + L.bw - 40));
+    });
+    note.textContent = wsp ? 'The edit made by Opus 5.5. Fine-tuning needs about 5×10⁵ labels to match it.' : '';
+  }
+  function play(m) {
+    mode = m; [].forEach.call(root.querySelectorAll('[data-mode]'), function (b) { b.classList.toggle('on', b.dataset.mode === m); });
+    cancelAnimationFrame(raf);
+    if (reduce) { render(1); return; }
+    t0 = performance.now();
+    (function f(t) { var p = Math.min(1, (t - t0) / 2200); render(p); if (p < 1) raf = requestAnimationFrame(f); })(t0);
+  }
+  var auto = 0;
+  function sequence() { clearTimeout(auto); play('ft'); if (!reduce) auto = setTimeout(function () { play('wsp'); }, 3000); }
+  root.querySelectorAll('[data-mode]').forEach(function (b) { b.addEventListener('click', function () { clearTimeout(auto); play(b.dataset.mode); }); });
+  root.querySelector('[data-replay]').addEventListener('click', sequence);
+  build(); [].forEach.call(root.querySelectorAll('[data-mode]'), function (b) { b.classList.toggle('on', b.dataset.mode === mode); });
+  var lastW = svg.getBoundingClientRect().width;
+  window.addEventListener('resize', function () { var w = svg.getBoundingClientRect().width; if ((w < 600) !== (lastW < 600)) { build(); render(1); } lastW = w; });
+  listeners.push(function () { build(); render(1); });
+  if (reduce) { play('wsp'); return; }
+  onVisible(root, function (v) { if (v) sequence(); }, true);
+})();
+
+/* ---------- quadratic-form widget ---------- */
+(function gWidget() {
+  var root = document.getElementById('gw'), svg = document.getElementById('gSvg'), prog = document.getElementById('gProg'), read = document.getElementById('gRead'), phase = document.getElementById('gPhase');
+  var NS = 'http://www.w3.org/2000/svg', N = 8, x0 = 56, y0 = 40, cs = 31;
+  var LAB = ['E₁', 'px₁', 'py₁', 'pz₁', 'E₂', 'px₂', 'py₂', 'pz₂'];
+  var target = [], cells = [], noise = [], drift = [];
+  for (var i = 0; i < N; i++) { target.push([]); for (var j = 0; j < N; j++) target[i].push(i % 4 === j % 4 ? (i % 4 === 0 ? 1 : -1) : 0); }
+  function el(tag, a, txt) { var e = document.createElementNS(NS, tag); for (var k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; svg.appendChild(e); return e; }
+  function build() {
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    cells = [];
+    var f = 'font-family:Inter,system-ui,sans-serif;font-size:11.5px;fill:' + C.muted;
+    for (var i = 0; i < N; i++) {
+      el('text', { x: x0 - 6, y: y0 + i * cs + cs * 0.65, 'text-anchor': 'end', style: f }, LAB[i]);
+      el('text', { x: x0 + i * cs + cs / 2, y: y0 - 8, 'text-anchor': 'middle', style: f }, LAB[i]);
+      cells.push([]);
+      for (var j = 0; j < N; j++) cells[i].push(el('rect', { x: x0 + j * cs + 1, y: y0 + i * cs + 1, width: cs - 2, height: cs - 2, rx: 2 }));
+    }
+    el('line', { x1: x0 + 4 * cs, x2: x0 + 4 * cs, y1: y0 - 2, y2: y0 + 8 * cs + 2, stroke: C.muted, 'stroke-dasharray': '3 3' });
+    el('line', { y1: y0 + 4 * cs, y2: y0 + 4 * cs, x1: x0 - 2, x2: x0 + 8 * cs + 2, stroke: C.muted, 'stroke-dasharray': '3 3' });
+    el('text', { x: x0 + 4 * cs, y: y0 + 8 * cs + 22, 'text-anchor': 'middle', style: 'font-family:JetBrains Mono,monospace;font-size:12px;fill:' + C.ink }, 'G');
+  }
+  function paint(e) {
+    for (var i = 0; i < N; i++) for (var j = 0; j < N; j++) {
+      var v = Math.max(-1, Math.min(1, (1 - e) * noise[i][j] + e * target[i][j]));
+      cells[i][j].setAttribute('fill', v >= 0 ? rgba(C.encode, 0.06 + 0.88 * v) : rgba(C.extract, 0.06 + 0.88 * -v));
+    }
+  }
+  var r = mulberry(5);
+  function reseed() {
+    noise = []; drift = [];
+    for (var i = 0; i < N; i++) { noise.push([]); drift.push([]); for (var j = 0; j < N; j++) { noise[i].push(0); drift[i].push(0); } }
+    for (i = 0; i < N; i++) for (j = i; j < N; j++) { var v = gauss(r) * 0.55; noise[i][j] = noise[j][i] = v; var d = gauss(r); drift[i][j] = drift[j][i] = d; }
+  }
+  var LINES = [
+    ['', 'E₁, E₂: +1.  px, py, pz: −1.'],
+    ['', 'Both particles share one block.'],
+    ['hl', 'y = (E₁+E₂)² − |𝐩₁+𝐩₂|² = m₁₂²']
+  ];
+  function showLines() {
+    read.innerHTML = '';
+    LINES.forEach(function (l) { var s = document.createElement('div'); if (l[0]) s.className = l[0]; s.textContent = l[1]; read.appendChild(s); });
+  }
+  var raf = 0;
+  function run() {
+    cancelAnimationFrame(raf); reseed(); read.innerHTML = ''; read.style.opacity = 0;
+    if (reduce) { paint(1); prog.style.width = '100%'; phase.textContent = 'LLM reading of the weights'; showLines(); read.style.opacity = 1; return; }
+    phase.textContent = 'training';
+    var t0 = performance.now();
+    (function f(t) {
+      var p = Math.min(1, (t - t0) / 3600);
+      for (var i = 0; i < N; i++) for (var j = i; j < N; j++) { noise[i][j] += drift[i][j] * 0.004 * Math.sin(t / 400 + i + j); noise[j][i] = noise[i][j]; }
+      paint(ease(p)); prog.style.width = (p * 100) + '%';
+      if (p < 1) raf = requestAnimationFrame(f);
+      else { phase.textContent = 'LLM reading of the weights'; showLines(); requestAnimationFrame(function () { read.style.opacity = 1; }); }
+    })(t0);
+  }
+  build(); reseed(); paint(reduce ? 1 : 0);
+  root.querySelector('[data-replay]').addEventListener('click', run);
+  listeners.push(function () { build(); paint(1); });
+  onVisible(root, function (v) { if (v) run(); }, true);
+})();
+
+/* ---------- boost widget ---------- */
+(function boostWidget() {
+  var cv = document.getElementById('boostCv'), ctx = cv.getContext('2d');
+  var slider = document.getElementById('yb'), out = document.getElementById('ybv'), btn = document.getElementById('ybplay');
+  var mEu = document.getElementById('mEu'), mMk = document.getElementById('mMk');
+  var r = mulberry(21), LAM = 10, P = [];
+  for (var i = 0; i < 18; i++) {
+    var pt = 500 * (-Math.log(r() || 1e-6)) / 18, eta = 0.6 + gauss(r) * 0.14, phi = gauss(r) * 0.14;
+    P.push([pt * Math.cosh(eta), pt * Math.cos(phi), pt * Math.sin(phi), pt * Math.sinh(eta)]);
+  }
+  var BP = [LAM, 0, 0, LAM], BM = [LAM, 0, 0, -LAM];
+  function boost(v, y) { var c = Math.cosh(y), s = Math.sinh(y); return [c * v[0] + s * v[3], v[1], v[2], s * v[0] + c * v[3]]; }
+  function dot(a, b, mk) { return mk ? a[0] * b[0] - a[1] * b[1] - a[2] * b[2] - a[3] * b[3] : a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3]; }
+  function raw(y, mk) {
+    var Q = P.map(function (p) { return boost(p, y); }), bp = boost(BP, y), bm = boost(BM, y), s = 0, n = 0;
+    for (var i = 0; i < Q.length; i++) for (var j = i + 1; j < Q.length; j++) { s += Math.log(1 + Math.abs(dot(Q[i], Q[j], mk)) / (LAM * LAM)); n++; }
+    var a = 0, b = 0;
+    Q.forEach(function (q) { a += Math.log(Math.abs(dot(q, bp, mk)) / (LAM * LAM)); b += Math.log(Math.abs(dot(q, bm, mk)) / (LAM * LAM)); });
+    return s / n + 0.35 * a / Q.length - 0.2 * b / Q.length;
+  }
+  var e0 = raw(0, false), m0 = raw(0, true), K = 1;
+  (function () { var mx = 0; for (var y = -1; y <= 1.0001; y += 0.05) mx = Math.max(mx, Math.abs(raw(y, false) - e0)); K = 2.2 / mx; })();
+  function score(y, mk) { var d = raw(y, mk) - (mk ? m0 : e0); return 1 / (1 + Math.exp(-(0.405 + K * d))); }
+  var curveE = [], curveM = [];
+  for (var y = -1; y <= 1.0001; y += 0.02) { curveE.push([y, score(y, false)]); curveM.push([y, score(y, true)]); }
+  var vmax = 0; [-1, 1].forEach(function (yy) { P.forEach(function (p) { var q = boost(p, yy); vmax = Math.max(vmax, Math.hypot(q[1], q[3])); }); });
+  var W, H, dpr, yb = 0, playing = !reduce, running = false, t0 = performance.now();
+  function layout() { dpr = Math.min(window.devicePixelRatio || 1, 2); W = cv.clientWidth; H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+  function arrow(x0, y0, x1, y1, col, w) {
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+    var a = Math.atan2(y1 - y0, x1 - x0), h = 4 + w * 1.5, len = Math.hypot(x1 - x0, y1 - y0); if (len < 3) return;
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - h * Math.cos(a - 0.4), y1 - h * Math.sin(a - 0.4)); ctx.lineTo(x1 - h * Math.cos(a + 0.4), y1 - h * Math.sin(a + 0.4)); ctx.closePath(); ctx.fill();
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    var narrow = W < 600, pad = 14;
+    var A = narrow ? { x: pad, y: 8, w: W - 2 * pad, h: H * 0.5 - 16 } : { x: pad, y: 8, w: W * 0.5 - 2 * pad, h: H - 16 };
+    var B = narrow ? { x: pad + 34, y: H * 0.5 + 18, w: W - 2 * pad - 40, h: H * 0.5 - 60 } : { x: W * 0.5 + 40, y: 22, w: W * 0.5 - 60, h: H - 66 };
+    ctx.font = '500 12px Inter, system-ui, sans-serif'; ctx.textAlign = 'left';
+    var cx = A.x + A.w * 0.5, cy = A.y + A.h * 0.62, R = Math.min(A.w * 0.46, A.h * 0.56);
+    ctx.fillStyle = C.muted; ctx.fillText('jet and beams, x–z plane', A.x, A.y + 12);
+    ctx.strokeStyle = C.line; ctx.lineWidth = 1; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(A.x, cy); ctx.lineTo(A.x + A.w, cy); ctx.stroke(); ctx.setLineDash([]);
+    ctx.textAlign = 'right'; ctx.fillText('z', A.x + A.w, cy + 16); ctx.textAlign = 'left';
+    var bl = R * 0.42;
+    arrow(cx, cy, cx + bl * Math.exp(yb), cy, C.gray, 2.2);
+    arrow(cx, cy, cx - bl * Math.exp(-yb), cy, C.gray, 2.2);
+    ctx.fillStyle = C.gray; ctx.fillText('beams', cx - bl * Math.exp(-yb), cy + 16);
+    P.forEach(function (p) {
+      var q = boost(p, yb), m = Math.hypot(q[1], q[3]), Lq = R * 1.05 * Math.sqrt(m / vmax);
+      arrow(cx, cy, cx + q[3] / m * Lq, cy - q[1] / m * Lq, rgba(C.law, 0.85), 1.5);
+    });
+    ctx.beginPath(); ctx.arc(cx, cy, 3.5, 0, 7); ctx.fillStyle = C.ink; ctx.fill();
+    function X(y) { return B.x + (y + 1) / 2 * B.w; } function Y(s) { return B.y + (1 - s) * B.h; }
+    ctx.strokeStyle = C.line; ctx.lineWidth = 1;
+    [0, 0.25, 0.5, 0.75, 1].forEach(function (s) { ctx.beginPath(); ctx.moveTo(B.x, Y(s)); ctx.lineTo(B.x + B.w, Y(s)); ctx.stroke(); });
+    ctx.fillStyle = C.muted; ctx.textAlign = 'right';
+    [0, 0.5, 1].forEach(function (s) { ctx.fillText(s.toFixed(1), B.x - 6, Y(s) + 4); });
+    ctx.textAlign = 'center';
+    [-1, -0.5, 0, 0.5, 1].forEach(function (y) { ctx.fillText(y, X(y), B.y + B.h + 16); });
+    ctx.fillText('boost rapidity y', B.x + B.w / 2, B.y + B.h + 32);
+    ctx.save(); ctx.translate(B.x - 30, B.y + B.h / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('score', 0, 0); ctx.restore();
+    function curve(pts, col) { ctx.strokeStyle = col; ctx.lineWidth = 2.2; ctx.beginPath(); pts.forEach(function (p, i) { i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1])); }); ctx.stroke(); }
+    curve(curveE, C.gray); curve(curveM, C.extract);
+    var se = score(yb, false), sm = score(yb, true);
+    [[se, C.gray], [sm, C.extract]].forEach(function (o) { ctx.beginPath(); ctx.arc(X(yb), Y(o[0]), 5, 0, 7); ctx.fillStyle = C.surface; ctx.fill(); ctx.lineWidth = 2.2; ctx.strokeStyle = o[1]; ctx.stroke(); });
+    mEu.textContent = se.toFixed(3); mMk.textContent = sm.toFixed(3);
+    out.textContent = 'y = ' + (yb >= 0 ? '+' : '−') + Math.abs(yb).toFixed(2);
+  }
+  function frame(t) {
+    if (!running) return;
+    if (playing) { yb = 0.85 * Math.sin((t - t0) / 1300); slider.value = yb; }
+    draw(); requestAnimationFrame(frame);
+  }
+  slider.addEventListener('input', function () { playing = false; btn.textContent = 'Play'; yb = +slider.value; draw(); });
+  btn.addEventListener('click', function () { playing = !playing; btn.textContent = playing ? 'Pause' : 'Play'; if (playing) t0 = performance.now() - Math.asin(Math.max(-1, Math.min(1, yb / 0.85))) * 1300; });
+  if (reduce) { btn.textContent = 'Play'; yb = 0.5; slider.value = 0.5; }
+  layout(); draw();
+  window.addEventListener('resize', function () { layout(); draw(); });
+  listeners.push(draw);
+  onVisible(cv, function (v) { if (v && !running) { running = true; requestAnimationFrame(frame); } else if (!v) running = false; });
+})();
+
 document.getElementById('copy').addEventListener('click', function () {
   var b = this, t = document.getElementById('bibtex').textContent;
-  try {
-    navigator.clipboard.writeText(t).then(function () { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500); });
-  } catch (e) { b.textContent = 'Select the text to copy'; }
+  try { navigator.clipboard.writeText(t).then(function () { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500); }); }
+  catch (e) { b.textContent = 'Select the text to copy'; }
 });
+})();
 </script>
 </body>
 </html>
